@@ -1,0 +1,16 @@
+name: npm
+on: [push]
+jobs:
+  npm:
+    runs-on: ubuntu-latest
+    steps:
+    - name: git checkout
+      uses: actions/checkout@v1
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '8.x'
+    - name: npm install
+      run: npm install
+    - name: npm audit
+      run: npm audit --production

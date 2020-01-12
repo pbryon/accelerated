@@ -1,0 +1,23 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_CLI_TELEMETRY_OPTOUT: 0
+    steps:
+    - name: git checkout
+      uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.100'
+    - name: Install dotnet global tools
+      run: |
+        dotnet tool install --tool-path . fake-cli
+        dotnet tool install --tool-path . paket --add-source https://www.myget.org/F/paket-netcore-as-tool/api/v3/index.json
+    - name: Build
+      run: dotnet build --nologo --configuration Release
+    - name: Test
+      run: dotnet test --nologo
