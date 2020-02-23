@@ -5,6 +5,9 @@
         <DefineConstants>FABLE_COMPILER</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
+        <ProjectReference Include="../Domain/Domain.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
         <None Include="index.html" />
         <None Include="paket.references" />
         <None Include="style.scss" />
