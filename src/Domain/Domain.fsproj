@@ -5,9 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="test.fsx" />
     <Compile Include="System.fs" />
     <Compile Include="FateCore.fs" />
     <Compile Include="FateAccelerated.fs" />
   </ItemGroup>
+
+  <ItemGroup />
 
 </Project>
