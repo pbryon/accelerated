@@ -1,12 +1,16 @@
 module Domain.System
 
 type CharacterName = CharacterName of string
+let characterName characterName =
+    let toString (CharacterName name) = name
+    toString characterName
 
 [<AutoOpen>]
 module Aspects =
-    type AspectName = AspectName of string with
-        static member empty = (AspectName "")
-        member x.Value = let (AspectName value) = x in value
+    type AspectName = AspectName of string
+    let aspectName aspectName =
+        let toString (AspectName name) = name
+        toString aspectName
 
     type Aspect =
     | HighConcept of AspectName
@@ -15,11 +19,11 @@ module Aspects =
 
     let private nextAspect =
         function
-        | 1 -> HighConcept AspectName.empty
-        | 2 -> Trouble AspectName.empty
-        | _ -> Other AspectName.empty
+        | 1 -> HighConcept (AspectName "")
+        | 2 -> Trouble (AspectName "")
+        | _ -> Other (AspectName "")
 
-    let createAspects count =
+    let internal createAspects count =
         match count with
         | 0 -> []
         | negative when negative < 0 -> []
@@ -41,7 +45,7 @@ module Ladder =
     | Poor
     | Terrible
 
-    let ladderRank =
+    let rankValue =
         function
         | Legendary -> 8
         | Epic -> 7
@@ -57,18 +61,21 @@ module Ladder =
 
 [<AutoOpen>]
 module Stress =
-    type Boxes = Boxes of int with
-        member x.Value = let (Boxes value) = x in value
+    type Boxes = Boxes of int
+    let boxValue boxes =
+        let toInt (Boxes value) = value
+        toInt boxes
 
-    type ConsequenceName = ConsequenceName of string with
-        static member empty = (ConsequenceName "")
-        member x.Value = let (ConsequenceName value) = x in value
+    type ConsequenceName = ConsequenceName of string
+    let consequenceName consequenceName =
+        let toString (ConsequenceName name) = name
+        toString consequenceName
 
     type StressType =
     | Physical
     | Mental
     | General
-    | None
+    | NA
 
     type StressBox = {
         Type: StressType
@@ -90,32 +97,24 @@ module Stress =
         Available: bool
     }
 
-    let consequenceBoxes consequence =
-        match consequence.Type with
-        | Mild _ -> 2
-        | Moderate _ -> 4
-        | Severe _ -> 6
-
-    let consequenceName consequence =
-        let toString (ConsequenceName name) = name
-        toString consequence.Name
-
+    // TODO: possibly rename/remove later on
     let toString consequence =
-        let name = consequenceName consequence
-        let value = consequenceBoxes consequence
+        let name = consequenceName consequence.Name
+        let value = boxValue consequence.Stress
         sprintf "%s (%d)" name value
 
-    let createStressBox stressType stress = {
-        Stress = stress
-        Usable = false
-        Filled = false
-        Type = stressType
-    }
+[<AutoOpen>]
+module Stunts =
+    type Refresh = Refresh of int
 
-    let createConsequence consequenceType stressType boxes = {
-        Type = consequenceType
-        StressType = stressType
-        Stress = boxes
-        Name = ConsequenceName.empty
-        Available = false
-    }
+    type StuntName = StuntName of string
+    let stuntName stuntName =
+        let toString (StuntName name) = name
+        toString stuntName
+
+    type StuntActivation =
+    | FatePoints of int
+    | Scene
+    | Conflict
+    | Day
+    | Session
