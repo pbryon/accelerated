@@ -1,27 +1,9 @@
 namespace Shared
 
-module Core =
-    open Shared.System
+open Domain.System
+open Domain.FateCore
+open Domain.FateAccelerated
 
-    type Skill = string * Rank
-    type CoreCharacter = {
-        Name : CharacterName
-        Aspects: Aspect list
-        Stress: StressBox list
-        Skills: Skill list
-    }
-
-    let createCharacter = {
-        Name = (CharacterName "")
-        Aspects = [
-            HighConcept (AspectName "")
-            Trouble (AspectName "")
-        ]
-        Stress = []
-        Skills = []
-    }
-
-module Accelerated =
-    open Aspects
-
-    type Approach = string * Rank
+type Counter = {
+    Value : int
+}
