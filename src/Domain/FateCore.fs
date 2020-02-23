@@ -43,7 +43,6 @@ module Skills =
             | _ -> NA
     }
     let createSkills rank names = names |> List.map (createSkill rank)
-    let createStartingSkills names = createSkills Mediocre names
 
 [<AutoOpen>]
 module Stress =
@@ -80,14 +79,11 @@ module Stress =
 
 [<AutoOpen>]
 module Stunts =
-    type Stunt ={
+    type Stunt = {
+        Name: StuntName
+        Description: string
         Skill: Skill option
         Activation: StuntActivation option
-    }
-
-    let private createStunt skill activation = {
-        Skill = skill
-        Activation = activation
     }
 
     let internal createStunts count =
@@ -95,12 +91,17 @@ module Stunts =
         | 0 -> []
         | negative when negative < 0 -> []
         | _ -> seq{for _ in 1 .. count do
-                    createStunt None None}
-                    |> List.ofSeq
+                    yield {
+                        Name = StuntName ""
+                        Description = ""
+                        Skill = None
+                        Activation = None
+                    }}
+                |> List.ofSeq
 
 [<AutoOpen>]
 module Campaign =
-    type Campaign = {
+    type FateCoreCampaign = {
         SkillLevel: Rank
         SkillList: string list
         Refresh: Refresh
@@ -117,6 +118,7 @@ module Campaign =
 module Characters =
     type FateCoreCharacter = {
         Name : CharacterName
+        Player: PlayerName
         Aspects: Aspect list
         Stress: StressBox list
         Skills: Skill list
@@ -130,7 +132,8 @@ module Characters =
         let stress  = createStressBoxes skills
         let stunts = createStunts campaign.Stunts
         {
-            Name = (CharacterName "")
+            Name = CharacterName ""
+            Player = PlayerName ""
             Aspects = aspects
             Stress = stress
             Skills = skills

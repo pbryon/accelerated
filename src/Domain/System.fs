@@ -1,16 +1,11 @@
 module Domain.System
 
 type CharacterName = CharacterName of string
-let characterName characterName =
-    let toString (CharacterName name) = name
-    toString characterName
+type PlayerName = PlayerName of string
 
 [<AutoOpen>]
 module Aspects =
     type AspectName = AspectName of string
-    let aspectName aspectName =
-        let toString (AspectName name) = name
-        toString aspectName
 
     type Aspect =
     | HighConcept of AspectName
@@ -62,14 +57,7 @@ module Ladder =
 [<AutoOpen>]
 module Stress =
     type Boxes = Boxes of int
-    let boxValue boxes =
-        let toInt (Boxes value) = value
-        toInt boxes
-
     type ConsequenceName = ConsequenceName of string
-    let consequenceName consequenceName =
-        let toString (ConsequenceName name) = name
-        toString consequenceName
 
     type StressType =
     | Physical
@@ -97,20 +85,10 @@ module Stress =
         Available: bool
     }
 
-    // TODO: possibly rename/remove later on
-    let toString consequence =
-        let name = consequenceName consequence.Name
-        let value = boxValue consequence.Stress
-        sprintf "%s (%d)" name value
-
 [<AutoOpen>]
 module Stunts =
     type Refresh = Refresh of int
-
     type StuntName = StuntName of string
-    let stuntName stuntName =
-        let toString (StuntName name) = name
-        toString stuntName
 
     type StuntActivation =
     | FatePoints of int
