@@ -42,7 +42,10 @@ module Skills =
             | "Will" -> Mental
             | _ -> NA
     }
-    let createSkills rank names = names |> List.map (createSkill rank)
+
+    let createSkills rank names =
+        names
+        |> List.map (createSkill rank)
 
 [<AutoOpen>]
 module Stress =
@@ -74,8 +77,7 @@ module Stress =
 
     let createStressBoxes skills =
         skills
-        |> List.map createStressBoxesForSkill
-        |> List.concat
+        |> List.collect createStressBoxesForSkill
 
 [<AutoOpen>]
 module Stunts =
@@ -87,17 +89,13 @@ module Stunts =
     }
 
     let internal createStunts count =
-        match count with
-        | 0 -> []
-        | negative when negative < 0 -> []
-        | _ -> seq{for _ in 1 .. count do
-                    yield {
-                        Name = StuntName ""
-                        Description = ""
-                        Skill = None
-                        Activation = None
-                    }}
-                |> List.ofSeq
+        validateCount count
+        |> List.map (fun _ -> {
+            Name = StuntName ""
+            Description = ""
+            Skill = None
+            Activation = None
+        })
 
 [<AutoOpen>]
 module Campaign =

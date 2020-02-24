@@ -22,8 +22,8 @@ module Approaches =
 
     let createApproaches rank names =
         names
-        |> List.map (fun x -> {
-            Name = ApproachName x
+        |> List.map (fun name -> {
+            Name = ApproachName name
             Rank = rank})
 
 [<AutoOpen>]
@@ -32,20 +32,19 @@ module Stress =
     | Single
     | Complex
 
-    let createSingleStressBoxes boxes stressType =
-        seq {for _ in 1 .. boxes do
-                yield {
-                    Type = stressType
-                    Usable = true
-                    Filled = false
-                    Stress = Boxes 1
-                }}
-        |> List.ofSeq
+    let createSingleStressBoxes stressType boxes  =
+        [1 .. boxes]
+        |> List.map (fun _ -> {
+            Type = stressType
+            Usable = true
+            Filled = false
+            Stress = Boxes 1
+        })
 
-    let createStressBox boxes stressType stressBoxType =
+    let createStressBox stressType stressBoxType boxes =
         match stressBoxType with
         | Single
-            -> createSingleStressBoxes boxes stressType
+            -> createSingleStressBoxes stressType boxes
         | Complex
             -> [{
                 Type = stressType
@@ -55,11 +54,11 @@ module Stress =
             }]
 
     let createStressBoxes stressTypes stressBoxType highestStressBox =
-        seq {for stressType in stressTypes do
-                for boxes in 1 .. highestStressBox do
-                    yield createStressBox boxes stressType stressBoxType
-            }
-        |> List.concat
+        stressTypes
+        |> List.collect (fun stressType ->
+            validateCount highestStressBox
+            |> List.collect (createStressBox stressType stressBoxType)
+        )
 
 [<AutoOpen>]
 module Stunts =
@@ -71,17 +70,13 @@ module Stunts =
     }
 
     let internal createStunts count =
-        match count with
-        | 0 -> []
-        | negative when negative < 0 -> []
-        | _ -> seq{for _ in 1 .. count do
-                    yield {
-                        Name = StuntName ""
-                        Description = ""
-                        Approach = None
-                        Activation = None
-                    }}
-                |> List.ofSeq
+        validateCount count
+        |> List.map (fun _ -> {
+            Name = StuntName ""
+            Description = ""
+            Approach = None
+            Activation = None
+        })
 
 [<AutoOpen>]
 module Campaign =

@@ -4,6 +4,14 @@ type CharacterName = CharacterName of string
 type PlayerName = PlayerName of string
 
 [<AutoOpen>]
+module Utils =
+    let validateCount =
+        function
+        | negative when negative < 0 -> []
+        | 0 -> []
+        | count -> [1 .. count]
+
+[<AutoOpen>]
 module Aspects =
     type AspectName = AspectName of string
 
@@ -19,11 +27,8 @@ module Aspects =
         | _ -> Other (AspectName "")
 
     let internal createAspects count =
-        match count with
-        | 0 -> []
-        | negative when negative < 0 -> []
-        | _ -> [ 1 .. count ]
-            |> List.map nextAspect
+        validateCount count
+        |> List.map nextAspect
 
 [<AutoOpen>]
 module Ladder =
