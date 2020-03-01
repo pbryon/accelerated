@@ -9,6 +9,8 @@
     <Compile Include="System.fs" />
     <Compile Include="FateCore.fs" />
     <Compile Include="FateAccelerated.fs" />
+    <Compile Include="Campaign.fs" />
+    <Compile Include="Characters.fs" />
   </ItemGroup>
 
   <ItemGroup />
