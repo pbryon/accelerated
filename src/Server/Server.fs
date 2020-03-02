@@ -3,6 +3,7 @@ open FSharp.Control.Tasks.V2
 open Giraffe
 open Saturn
 open Shared
+open Domain.Campaign
 
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
 
@@ -15,8 +16,8 @@ let port =
 let webApp = router {
     get "/api/init" (fun next ctx ->
         task {
-            let counter = {Value = 42}
-            return! json counter next ctx
+            let model = {Campaign = NotSelected}
+            return! json model next ctx
         })
 }
 
