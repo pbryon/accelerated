@@ -1,8 +1,11 @@
 module Domain.Campaign
 
+open System
 open Domain.System
 open Domain.FateCore
 open Domain.FateAccelerated
+
+type CampaignId = CampaignId of Guid
 
 type FateCoreCampaign = {
     SkillLevel: Rank
