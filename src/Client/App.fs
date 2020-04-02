@@ -1,17 +1,14 @@
 module App.Startup
 
 open Elmish
-open Elmish.React
+open Elmish.Navigation
 
-#if DEBUG
+open Elmish.React
 open Elmish.Debug
-open Elmish.HMR
-#endif
 
 Program.mkProgram State.init State.update View.view
-#if DEBUG
+|> Program.toNavigable Global.urlParser State.urlUpdate
 |> Program.withConsoleTrace
-#endif
 |> Program.withReactBatched "elmish-app"
 #if DEBUG
 |> Program.withDebugger

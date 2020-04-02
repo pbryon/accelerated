@@ -4,6 +4,8 @@ open Domain.Campaign
 
 type Model = {
     Campaign: CampaignType
+    CampaignId: CampaignId
+    Player: string
 }
 
 type Msg =

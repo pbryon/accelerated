@@ -22,7 +22,7 @@ let private menuItem label page currentPage =
   Navbar.Item.a
     [
       Navbar.Item.IsActive isActive
-      Navbar.Item.Props [ Href <| toAnchor page ]
+      Navbar.Item.Props [ Href <| toHash page ]
     ]
     [
       str label
@@ -43,7 +43,7 @@ let private menuItem label page currentPage =
 //         ]
 
 let private navbarStart dispatch user currentPage =
-    Navbar.Start.a []
+    Navbar.Start.div []
         [
           menuItem "Home" Page.Index currentPage
           menuItem "Characters" Page.Characters currentPage

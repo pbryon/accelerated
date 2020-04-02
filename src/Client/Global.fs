@@ -1,6 +1,8 @@
 module Global
 
+open Elmish.UrlParser
 open Domain.Campaign
+open Fable.Core
 
 type UserData =
   {
@@ -14,7 +16,17 @@ type Page =
     | Index
     | Characters
 
-let toAnchor page =
+let toHash page =
   match page with
   | Page.Index -> "#"
   | Page.Characters -> "#characters"
+
+let private pageParser: Parser<Page -> Page, _> =
+    oneOf
+        [
+            map Page.Index top
+            map Page.Characters (s "characters")
+        ]
+
+let urlParser location =
+  parseHash pageParser location
