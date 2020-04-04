@@ -1,8 +1,10 @@
 source https://www.nuget.org/api/v2
+nuget Fable.Elmish.Browser
+nuget Microsoft.AspNetCore.Authentication.JwtBearer
 
 group Server
     source https://api.nuget.org/v3/index.json
-    framework: netcoreapp3.0
+    framework: netcoreapp3.1
     storage: none
 
     nuget FSharp.Core
@@ -17,6 +19,7 @@ group Client
     nuget Fable.Core ~> 3
     nuget Fable.Elmish ~> 3
     nuget Fable.Elmish.Debugger ~> 3
+    nuget Fable.Elmish.Browser
     nuget Fable.Elmish.React ~> 3
     nuget Thoth.Fetch ~> 1
     nuget Thoth.Json ~> 3
