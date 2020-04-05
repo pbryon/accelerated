@@ -75,7 +75,7 @@ let private navbarEnd =
 let view dispatch user currentPage =
   div [ ClassName "navbar-bg" ]
     [
-      Container.container [ Container.IsFluid ]
+      Container.container [ Container.IsFullHD ]
         [
           Navbar.navbar [ Navbar.Color IsPrimary ]
             [

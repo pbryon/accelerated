@@ -15,5 +15,13 @@ $family-primary: 'Open Sans';
 // Bulma
 @import "~bulma/bulma";
 
+.navbar {
+    padding: 0 8px;
+}
 
-
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 48px 24px;
+}
