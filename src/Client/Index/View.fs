@@ -1,7 +1,7 @@
 module Index.View
 
-open Fable.React
+open Feliz
 
 let view =
   []
-  |> div []
+  |> Html.div

@@ -7,6 +7,7 @@ importAll "./style.scss"
 open Fable.React
 open App.Types
 open Fulma
+open Feliz
 
 let view model dispatch =
   let pageHtml currentPage =
@@ -24,4 +25,4 @@ let view model dispatch =
         [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ SafeComponents.View.view ] ]
   ]
-  |> div []
+  |> Html.div
