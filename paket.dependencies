@@ -27,6 +27,7 @@ group Client
     nuget Fulma ~> 2
     nuget Fable.FontAwesome.Free ~> 2
     nuget Feliz
+    nuget Feliz.Bulma
 
 group Build
     source https://api.nuget.org/v3/index.json
