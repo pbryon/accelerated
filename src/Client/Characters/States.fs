@@ -29,7 +29,8 @@ let rename name value xs =
         if x = name
         then value
         else x
-    List.map (fun x -> replaceValue name value x) <| xs
+
+    List.map (fun x -> replaceValue name value x) xs
 
 let renameAbility model (oldName: string) (newName: string) : Campaign option =
     match model.Campaign with

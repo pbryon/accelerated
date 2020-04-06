@@ -8,56 +8,39 @@ open Elmish.Common
 open Characters.Types
 open Domain.Campaign
 
-let selectCampaign expected model props =
-    if model.CampaignType = expected
-    then
-        [ button.isActive ]
-    else
-        [
-            button.isLight
-        ]
-    |> List.append props
-    |> Bulma.button
-
 let chooseCampaignType dispatch model =
     let title =
         if model.CampaignType = CampaignType.NotSelected
         then "Select a campaign type:"
         else "Selected campaign type:"
 
-    Bulma.columns [
-        columns.isVcentered
-        prop.children [
-            Bulma.column [
-                column.is3
-                column.isOffset1
-                prop.style [ style.textAlign.left ]
-                prop.children [ Bulma.label title ]
-            ]
-            Bulma.column [
-                Bulma.buttons [
-                    buttons.hasAddons
-                    prop.children [
-                        selectCampaign CampaignType.Core model [
-                            prop.text "Fate Core"
-                            button.isPrimary
-                            prop.onClick (fun _ -> SelectCoreCampaign |> dispatch)
-                        ]
-                        selectCampaign CampaignType.FAE model [
-                            prop.text "Fate Accelerated"
-                            button.isPrimary
-                            prop.onClick (fun _ -> SelectFAECampaign |> dispatch)
-                        ]
-                        Bulma.button [
-                            button.isDanger
-                            prop.text "Reset"
-                            button.isHovered
-                            prop.onClick (fun _ -> ResetCampaign |> dispatch )
-                        ]
-                    ]
+    colLayout [
+        labelCol [ Bulma.label title ]
+        {
+            Size = [ column.is4 ]
+            Align = style.textAlign.left
+            Content =
+                buttonGroup [
+                    {
+                        Text = "Fate Core"
+                        Color = button.isPrimary
+                        Active = model.CampaignType = CampaignType.Core
+                        OnClick = (fun _ -> SelectCoreCampaign |> dispatch)
+                    }
+                    {
+                        Text = "Fate Accelerated"
+                        Color = button.isPrimary
+                        Active = model.CampaignType = CampaignType.FAE
+                        OnClick = (fun _ -> SelectFAECampaign |> dispatch)
+                    }
+                    {
+                        Text = "Reset"
+                        Color = button.isDanger
+                        Active = true
+                        OnClick = (fun _ -> ResetCampaign |> dispatch )
+                    }
                 ]
-            ]
-        ]
+        }
     ]
 
 let abilityName model =
@@ -68,28 +51,29 @@ let abilityName model =
 
 let toggleCustomAbilities dispatch model =
     let abilityName = abilityName model
+    let toggleCustomAbilities = (fun _ -> ToggleCustomAbilities |> dispatch)
 
-    Bulma.columns [
-        Bulma.column [
-            column.is3
-            column.isOffset1
-            prop.children [
-                Bulma.label [
-                    alignLeft
-                    prop.text (sprintf "Use default %s:" abilityName)
+    colLayout [
+        labelCol [ Bulma.label (sprintf "%s selection:" abilityName) ]
+        {
+            Size = [ column.is4 ]
+            Align = style.textAlign.left
+            Content =
+                buttonGroup [
+                    {
+                        Text = (sprintf "Use default %s" abilityName)
+                        Color = button.isPrimary
+                        Active = model.Abilities = AbilityType.Default
+                        OnClick = toggleCustomAbilities
+                    }
+                    {
+                        Text = (sprintf "Customise %s" abilityName)
+                        Color = button.isPrimary
+                        Active = model.Abilities = AbilityType.Custom
+                        OnClick = toggleCustomAbilities
+                    }
                 ]
-            ]
-        ]
-        Bulma.column [
-            column.is4
-            alignLeft
-            prop.children [
-                Bulma.checkboxInput [
-                    prop.isChecked (model.Abilities = AbilityType.Default)
-                    prop.onClick (fun _ -> ToggleCustomAbilities |> dispatch )
-                ]
-            ]
-        ]
+        }
     ]
 
 let getAbilities dispatch model =
