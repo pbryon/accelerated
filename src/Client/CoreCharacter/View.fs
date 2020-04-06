@@ -39,24 +39,33 @@ let customiseSkills dispatch model =
     match model.Skills with
     | AbilityType.Default ->
         Html.none
+
     | AbilityType.Custom ->
         let textChanged oldValue newValue =
             RenameSkill (oldValue, newValue) |> dispatch
-        let newSkill _ = AddNewSkill |> dispatch
+        let inputSkill _ = InputNewSkill |> dispatch
+        let changeNewSkill value = UpdateNewSkill value |> dispatch
+        let addSkill _ = AddNewSkill |> dispatch
 
         let skills =
             match model.Campaign with
             | None -> []
             | Some campaign -> campaign.SkillList
 
-        let textBoxes = abilityTextBoxes skills textChanged newSkill
+        let showInputButton = newItemButton "Skill" model.NewSkill inputSkill
+        let inputFields = newItemInputs "Skill" model.NewSkill changeNewSkill addSkill
+        let textBoxes = abilityTextBoxes skills textChanged
+
+        let elements =
+            [ showInputButton; inputFields ]
+            |> List.append textBoxes
 
         colLayout [
             labelCol []
             {
                 Size = [ column.is8 ]
                 Align = style.textAlign.left
-                Content = textBoxes
+                Content = [ fluidColLayout elements ]
             }
         ]
 

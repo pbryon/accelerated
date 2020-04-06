@@ -15,6 +15,7 @@ let init (user: UserData) : Model * Cmd<Msg> =
         CampaignId = user.CampaignId
         Skills = AbilityType.Default
         Character = None
+        NewSkill = None
         Player = user.UserName
     }
     |> withoutCommands
@@ -25,6 +26,7 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         { currentModel with
             Campaign = Some defaultCoreCampaign
             Character = None
+            NewSkill = None
             Skills = AbilityType.Default }
         |> withoutCommands
 
@@ -34,27 +36,50 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         |> withoutCommands
 
     | RenameSkill (oldName, newName) ->
-        { currentModel with
-            Campaign =
-                match currentModel.Campaign with
-                | Some campaign ->
-                    Some {
-                        campaign with
-                            SkillList = renameAbility campaign.SkillList oldName newName
-                    }
+        match currentModel.Campaign with
+        | None ->
+            currentModel |> withoutCommands
 
-                | None -> None
-        }
+        | Some campaign ->
+            let approaches = renameAbility campaign.SkillList oldName newName
+
+            { currentModel with
+                Campaign = Some {
+                    campaign with SkillList = approaches
+                }}
+            |> withoutCommands
+
+    | InputNewSkill ->
+        { currentModel with NewSkill = Some "Untitled" }
+        |> withoutCommands
+
+    | UpdateNewSkill name ->
+        { currentModel with NewSkill = Some name }
         |> withoutCommands
 
     | AddNewSkill ->
-        { currentModel with
-            Campaign =
-                match currentModel.Campaign with
-                | Some campaign ->
-                    Some {
-                        campaign with SkillList = "New Skill" :: campaign.SkillList
+        match currentModel.Campaign with
+        | None ->
+            currentModel
+            |> withoutCommands
+
+        | Some campaign ->
+            let newSkill = defaultArg currentModel.NewSkill ""
+            let exists =
+                campaign.SkillList
+                |> List.tryFind (fun item -> item = newSkill)
+
+            if exists.IsSome
+            then failwithf "Skill already exists: %s" newSkill
+            else
+                let skills =
+                    [ newSkill ]
+                    |> List.append campaign.SkillList
+
+                { currentModel with
+                    Campaign = Some {
+                        campaign with SkillList = skills
                     }
-                | None -> None
-            }
-        |> withoutCommands
+                    NewSkill = None
+                }
+                |> withoutCommands

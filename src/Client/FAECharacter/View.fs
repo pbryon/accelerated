@@ -39,24 +39,33 @@ let customiseApproaches dispatch model =
     match model.Approaches with
     | AbilityType.Default ->
         Html.none
+
     | AbilityType.Custom ->
         let textChanged oldValue newValue =
             RenameApproach (oldValue, newValue) |> dispatch
-        let newApproach _ = AddNewApproach |> dispatch
+        let inputApproach _ = InputNewApproach |> dispatch
+        let changeNewApproach value = UpdateNewApproach value |> dispatch
+        let addApproach _ = AddNewApproach |> dispatch
 
         let approaches =
             match model.Campaign with
             | None -> []
             | Some campaign -> campaign.ApproachList
 
-        let textBoxes = abilityTextBoxes approaches textChanged newApproach
+        let showInputButton = newItemButton "Approach" model.NewApproach inputApproach
+        let inputFields = newItemInputs "Approach" model.NewApproach changeNewApproach addApproach
+        let textBoxes = abilityTextBoxes approaches textChanged
+
+        let elements =
+            [ showInputButton; inputFields ]
+            |> List.append textBoxes
 
         colLayout [
             labelCol []
             {
                 Size = [ column.is8 ]
                 Align = style.textAlign.left
-                Content = textBoxes
+                Content = [ fluidColLayout elements ]
             }
         ]
 

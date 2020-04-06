@@ -66,18 +66,24 @@ let colLayout (cols: ColumnDefinition list) =
         prop.children (cols |> List.map createColumn)
     ]
 
+let fluidColLayout (elements: ReactElement list) =
+    Bulma.columns [
+        columns.isMultiline
+        columns.isGapless
+        prop.children elements
+    ]
+
 let fontAwesome icon =
     Bulma.icon [
         prop.classes [ icon ]
     ]
 
 let imgButton (text: string) icon (props: IReactProperty list) =
-    Bulma.control [
-        Bulma.button [
-            yield! props
-            prop.children [
-                fontAwesome icon
-                Html.span text
-            ]
+    Bulma.button [
+        yield! props
+        prop.children [
+            fontAwesome icon
+            Html.span text
         ]
     ]
+

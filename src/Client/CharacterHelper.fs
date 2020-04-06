@@ -43,30 +43,62 @@ let private abilityTextBox (onTextChange: string -> string -> unit ) (item: stri
                 prop.defaultValue item
                 prop.name item
                 prop.onTextChange (fun value -> onTextChange item value)
-                prop.style [ style.maxWidth (length.perc 90) ]
+                prop.style [
+                    style.maxWidth (length.perc 90)
+                    style.marginTop 5 ]
             ]
         ]
     ]
 
+let abilityTextBoxes (abilities: string list) (onTextChange: string -> string -> unit) =
+    abilities
+    |> List.map (abilityTextBox onTextChange)
 
-let abilityTextBoxes
-    (abilities: string list)
-    (onTextChange: string -> string -> unit)
-    (onAdd: MouseEvent -> unit) =
+let newItemButton (itemType: string) (currentValue: string option) (onAdd: MouseEvent -> unit) =
+    match currentValue with
+    | Some _ ->
+        Html.none
 
-    let addNew = imgButton "Add new" fa.plus [
-        button.isInfo
-        prop.onClick onAdd
-        prop.style [ style.marginTop 5 ]
-    ]
-    let rows =
-        abilities
-        |> List.map (abilityTextBox onTextChange)
-
-    [
-        Bulma.columns [
-            columns.isMultiline
-            columns.isGapless
-            prop.children ([addNew] |> List.append(rows))
+    | None ->
+        let text = sprintf "Add new %s" itemType
+        Bulma.column [
+            column.is4
+            prop.children [
+                imgButton text fa.plus [
+                    button.isInfo
+                    prop.onClick onAdd
+                    prop.style [ style.marginTop 5 ]
+                ]
+            ]
         ]
-    ]
+
+let newItemInputs
+    (name: string)
+    (value: string option)
+    (onTextChange: string -> unit)
+    (onAdd: MouseEvent -> unit) =
+    match value with
+    | None ->
+        Html.none
+
+    | Some _ ->
+        let field = sprintf "New_%s" name
+        Bulma.column [
+            column.isTwoThirds
+            prop.style [ style.marginTop 5 ]
+            prop.children [
+                Bulma.textInput [
+                    prop.name field
+                    prop.className "input"
+                    prop.placeholder (sprintf "New %s" name)
+                    prop.defaultValue ""
+                    prop.onTextChange onTextChange
+                    prop.style [ style.maxWidth (length.perc 60) ]
+                ]
+                imgButton "Add" fa.check [
+                    button.isInfo
+                    prop.style [ style.marginLeft 10]
+                    prop.onClick onAdd
+                ]
+            ]
+        ]

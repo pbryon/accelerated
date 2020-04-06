@@ -8,6 +8,7 @@ type Model = {
     CampaignId: CampaignId
     Character: FateAcceleratedCharacter option
     Approaches: AbilityType
+    NewApproach: string option
     Player: string
 }
 
@@ -15,4 +16,6 @@ type Msg =
     | ResetCampaign
     | ToggleCustomApproaches
     | RenameApproach of string * string
+    | InputNewApproach
+    | UpdateNewApproach of string
     | AddNewApproach
