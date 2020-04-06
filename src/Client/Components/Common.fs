@@ -35,6 +35,7 @@ let private createButton (item: ButtonState) : ReactElement =
 let buttonGroup (items: ButtonState list) =
     [
         Bulma.buttons [
+            buttons.isCentered
             buttons.hasAddons
             prop.children (items |> List.map createButton)
         ]
@@ -63,4 +64,20 @@ let labelCol content =
 let colLayout (cols: ColumnDefinition list) =
     Bulma.columns [
         prop.children (cols |> List.map createColumn)
+    ]
+
+let fontAwesome icon =
+    Bulma.icon [
+        prop.classes [ icon ]
+    ]
+
+let imgButton (text: string) icon (props: IReactProperty list) =
+    Bulma.control [
+        Bulma.button [
+            yield! props
+            prop.children [
+                fontAwesome icon
+                Html.span text
+            ]
+        ]
     ]

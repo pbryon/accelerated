@@ -13,20 +13,20 @@ let toggleCustomApproaches dispatch model =
     let toggleCustomApproaches = (fun _ -> ToggleCustomApproaches |> dispatch)
 
     colLayout [
-        labelCol [ Bulma.label "Approach selection:" ]
+        labelCol [ Bulma.label "Approaches:" ]
         {
-            Size = [ column.is6 ]
+            Size = [ column.is4 ]
             Align = style.textAlign.left
             Content =
                 buttonGroup [
                     {
-                        Text = "Use default Approaches"
+                        Text = "Use default"
                         Color = button.isPrimary
                         Active = model.Approaches = AbilityType.Default
                         OnClick = toggleCustomApproaches
                     }
                     {
-                        Text = "Use custom Approaches"
+                        Text = "Customise"
                         Color = button.isPrimary
                         Active = model.Approaches = AbilityType.Custom
                         OnClick = toggleCustomApproaches
@@ -42,18 +42,19 @@ let customiseApproaches dispatch model =
     | AbilityType.Custom ->
         let textChanged oldValue newValue =
             RenameApproach (oldValue, newValue) |> dispatch
+        let newApproach _ = AddNewApproach |> dispatch
 
-        let Approaches =
+        let approaches =
             match model.Campaign with
             | None -> []
             | Some campaign -> campaign.ApproachList
 
-        let textBoxes = abilityTextBoxes Approaches textChanged
+        let textBoxes = abilityTextBoxes approaches textChanged newApproach
 
         colLayout [
-            labelCol [ Bulma.label "Approaches:" ]
+            labelCol []
             {
-                Size = [ column.is4 ]
+                Size = [ column.is8 ]
                 Align = style.textAlign.left
                 Content = textBoxes
             }
@@ -65,10 +66,17 @@ let getDocTitle model =
     | Some _ -> "Character creation"
 
 let debug model =
-    [
-        Html.h3 "Campaign"
-        Html.div (sprintf "%A" model.Campaign)
-    ]
+    match (model.Campaign, model.Character) with
+    | (_, None) ->
+        [
+            Html.h3 "Campaign"
+            Html.div (sprintf "%A" model.Campaign)
+        ]
+    | (_, Some character) ->
+        [
+            Html.h3 "Character"
+            Html.div (sprintf "%A" character)
+        ]
 
 let view dispatch model =
     [

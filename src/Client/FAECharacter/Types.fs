@@ -15,3 +15,4 @@ type Msg =
     | ResetCampaign
     | ToggleCustomApproaches
     | RenameApproach of string * string
+    | AddNewApproach

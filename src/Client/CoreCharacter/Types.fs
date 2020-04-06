@@ -15,3 +15,4 @@ type Msg =
     | ResetCampaign
     | ToggleCustomSkills
     | RenameSkill of string * string
+    | AddNewSkill

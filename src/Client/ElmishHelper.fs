@@ -11,3 +11,9 @@ let withCommand (cmds : Cmd<'a>) model =
 
 let withoutCommands model =
   model, Cmd.none
+
+module Icons =
+    type fa =
+        static member inline github = "fab fa-github"
+        static member inline plus = "fas fa-plus"
+        static member inline trash = "fas fa-trash-alt"

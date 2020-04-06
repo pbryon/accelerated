@@ -2,8 +2,11 @@ module Navbar.View
 
 open Feliz
 open Feliz.Bulma
+
 open Global
+open Icons
 open App.Types
+open Elmish.Common
 
 let private isMenuItemActive page currentPage =
     match currentPage with
@@ -54,14 +57,8 @@ let private navbarEnd =
             Bulma.field [
                 field.isGrouped
                 prop.children [
-                    Bulma.control [
-                        Bulma.button [
-                            prop.href "https://github.com/pbryon/accelerated"
-                            prop.children [
-                                Bulma.icon [ prop.classes ["fa-i fa-brand-github"] ]
-                                Html.span "Source"
-                            ]
-                        ]
+                    imgButton "Source" fa.github [
+                        prop.href "https://github.com/pbryon/accelerated"
                     ]
                 ]
             ]

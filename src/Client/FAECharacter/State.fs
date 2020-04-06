@@ -46,3 +46,15 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
                 | None -> None
         }
         |> withoutCommands
+
+    | AddNewApproach ->
+        { currentModel with
+            Campaign =
+                match currentModel.Campaign with
+                | Some campaign ->
+                    Some {
+                        campaign with ApproachList = ("New Approach" :: campaign.ApproachList)
+                    }
+                | None -> None
+            }
+        |> withoutCommands

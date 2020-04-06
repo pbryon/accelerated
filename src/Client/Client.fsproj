@@ -18,6 +18,7 @@
         <Compile Include="FAECharacter/Types.fs" />
         <Compile Include="Types.fs" />
         <Compile Include="ElmishHelper.fs" />
+        <Compile Include="Components/Icons.fs" />
         <Compile Include="Components/Common.fs" />
         <Compile Include="Components/Navbar.fs" />
         <Compile Include="Components/SafeComponents.fs" />
