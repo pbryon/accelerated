@@ -10,7 +10,7 @@ Program.mkProgram State.init State.update View.view
 |> Program.toNavigable Global.urlParser State.urlUpdate
 |> Program.withConsoleTrace
 |> Program.withReactBatched "elmish-app"
-#if DEBUG
+// #if DEBUG
 |> Program.withDebugger
-#endif
+// #endif
 |> Program.run

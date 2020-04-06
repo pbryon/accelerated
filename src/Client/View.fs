@@ -8,6 +8,7 @@ open Fable.React
 open App.Types
 open Fulma
 open Feliz
+open Feliz.Bulma
 
 let view model dispatch =
   let pageHtml currentPage =
@@ -21,8 +22,11 @@ let view model dispatch =
   [
     Navbar.View.view dispatch model.User model.CurrentPage
     pageHtml model.CurrentPage
-    Footer.footer []
-        [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
-            [ SafeComponents.View.view ] ]
+    Bulma.footer [
+        Bulma.content [
+            text.hasTextCentered
+            prop.children [ SafeComponents.View.view ]
+        ]
+    ]
   ]
   |> Html.div

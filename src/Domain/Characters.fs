@@ -60,3 +60,7 @@ let createFAECharacter campaign =
 
 let createDefaultFateAcceleratedCharacter =
     createFAECharacter defaultFAECampaign
+
+type PlayerCharacter =
+    | Core of FateCoreCharacter
+    | FAE of FateAcceleratedCharacter

@@ -24,10 +24,20 @@ type FateAcceleratedCampaign = {
     Stunts: int
 }
 
+[<RequireQualifiedAccess>]
 type CampaignType =
+    | Core
+    | FAE
+    | NotSelected
+
+[<RequireQualifiedAccess>]
+type AbilityType =
+    | Custom
+    | Default
+
+type Campaign =
     | Core of FateCoreCampaign
     | FAE of FateAcceleratedCampaign
-    | NotSelected
 
 let defaultCoreCampaign = {
     SkillLevel = Mediocre;

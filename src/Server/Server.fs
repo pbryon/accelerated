@@ -16,7 +16,7 @@ let port =
 let webApp = router {
     get "/api/init" (fun next ctx ->
         task {
-            let model = {Campaign = NotSelected}
+            let model = {Campaign = CampaignType.NotSelected}
             return! json model next ctx
         })
 }
