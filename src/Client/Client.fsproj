@@ -14,16 +14,20 @@
         <Compile Include="../Shared/Shared.fs" />
         <Compile Include="Version.fs" />
         <Compile Include="Global.fs" />
-        <Compile Include="Characters/Types.fs" />
+        <Compile Include="CoreCharacter/Types.fs" />
+        <Compile Include="FAECharacter/Types.fs" />
         <Compile Include="Types.fs" />
         <Compile Include="ElmishHelper.fs" />
         <Compile Include="Components/Common.fs" />
         <Compile Include="Components/Navbar.fs" />
         <Compile Include="Components/SafeComponents.fs" />
-        <Compile Include="Characters/States.fs" />
-        <Compile Include="Characters/View.fs" />
+        <Compile Include="CharacterHelper.fs" />
+        <Compile Include="CoreCharacter/State.fs" />
+        <Compile Include="FAECharacter/State.fs" />
+        <Compile Include="CoreCharacter/View.fs" />
+        <Compile Include="FAECharacter/View.fs" />
         <Compile Include="Index/View.fs" />
-        <Compile Include="States.fs" />
+        <Compile Include="State.fs" />
         <Compile Include="View.fs" />
         <Compile Include="App.fs" />
     </ItemGroup>

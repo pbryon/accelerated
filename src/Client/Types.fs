@@ -5,7 +5,8 @@ open Global
 [<RequireQualifiedAccess>]
 type CurrentPage =
     | Index
-    | Characters of Characters.Types.Model
+    | CoreCharacter of CoreCharacter.Types.Model
+    | FAECharacter of FAECharacter.Types.Model
 
 type Model = {
     User: UserData option
@@ -13,7 +14,8 @@ type Model = {
 }
 
 type Msg =
-    | CharacterMsg of Characters.Types.Msg
+    | CoreCharacterMsg of CoreCharacter.Types.Msg
+    | FAECharacterMsg of FAECharacter.Types.Msg
     | LoggedIn of UserData
     | LoggedOut
     | Logout

@@ -16,8 +16,11 @@ let view model dispatch =
     | CurrentPage.Index ->
         Index.View.view
 
-    | CurrentPage.Characters submodel ->
-        Characters.View.view (CharacterMsg >> dispatch) submodel
+    | CurrentPage.CoreCharacter submodel ->
+        CoreCharacter.View.view (CoreCharacterMsg >> dispatch) submodel
+
+    | CurrentPage.FAECharacter submodel ->
+        FAECharacter.View.view (FAECharacterMsg >> dispatch) submodel
 
   [
     Navbar.View.view dispatch model.User model.CurrentPage

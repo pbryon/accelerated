@@ -62,6 +62,5 @@ let labelCol content =
 
 let colLayout (cols: ColumnDefinition list) =
     Bulma.columns [
-        columns.isVcentered
         prop.children (cols |> List.map createColumn)
     ]

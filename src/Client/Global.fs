@@ -2,7 +2,6 @@ module Global
 
 open Elmish.UrlParser
 open Domain.Campaign
-open Fable.Core
 
 type UserData =
   {
@@ -14,18 +13,21 @@ type UserData =
 [<RequireQualifiedAccess>]
 type Page =
     | Index
-    | Characters
+    | CoreCharacter
+    | FAECharacter
 
 let toHash page =
   match page with
   | Page.Index -> "#"
-  | Page.Characters -> "#characters"
+  | Page.CoreCharacter -> "#core-character"
+  | Page.FAECharacter -> "#fae-character"
 
 let private pageParser: Parser<Page -> Page, _> =
     oneOf
         [
             map Page.Index top
-            map Page.Characters (s "characters")
+            map Page.CoreCharacter (s "core-character")
+            map Page.FAECharacter (s "fae-character")
         ]
 
 let urlParser location =

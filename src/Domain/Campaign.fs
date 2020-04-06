@@ -36,8 +36,8 @@ type AbilityType =
     | Default
 
 type Campaign =
-    | Core of FateCoreCampaign
-    | FAE of FateAcceleratedCampaign
+    | Core of FateCoreCampaign option
+    | FAE of FateAcceleratedCampaign option
 
 let defaultCoreCampaign = {
     SkillLevel = Mediocre;

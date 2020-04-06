@@ -35,12 +35,22 @@ let urlUpdate (result : Page option) model =
         { model with CurrentPage = CurrentPage.Index}
         |> withoutCommands
 
-    | Some Page.Characters ->
+    | Some Page.CoreCharacter ->
         match model.User with
         | Some user ->
-            let submodel,cmd = Characters.State.init user
-            { model with CurrentPage = CurrentPage.Characters submodel }
-            |> withCommand (Cmd.map CharacterMsg cmd)
+            let submodel,cmd = CoreCharacter.State.init user
+            { model with CurrentPage = CurrentPage.CoreCharacter submodel }
+            |> withCommand (Cmd.map CoreCharacterMsg cmd)
+
+        | None ->
+            model |> navigateTo Page.Index
+
+    | Some Page.FAECharacter ->
+        match model.User with
+        | Some user ->
+            let submodel,cmd = FAECharacter.State.init user
+            { model with CurrentPage = CurrentPage.FAECharacter submodel }
+            |> withCommand (Cmd.map FAECharacterMsg cmd)
 
         | None ->
             model |> navigateTo Page.Index
@@ -62,11 +72,17 @@ let private deleteUserCmd =
 
 let update msg model =
     match msg, model.CurrentPage with
-    | CharacterMsg msg, CurrentPage.Characters submodel ->
-        let (character, characterCmd) = Characters.State.update msg submodel
+    | CoreCharacterMsg msg, CurrentPage.CoreCharacter submodel ->
+        let (character, characterCmd) = CoreCharacter.State.update msg submodel
         model
-        |> withCurrentPage (CurrentPage.Characters character)
-        |> withCommand (Cmd.map CharacterMsg characterCmd)
+        |> withCurrentPage (CurrentPage.CoreCharacter character)
+        |> withCommand (Cmd.map CoreCharacterMsg characterCmd)
+
+    | FAECharacterMsg msg, CurrentPage.FAECharacter submodel ->
+        let (character, characterCmd) = FAECharacter.State.update msg submodel
+        model
+        |> withCurrentPage (CurrentPage.FAECharacter character)
+        |> withCommand (Cmd.map FAECharacterMsg characterCmd)
 
     | LoggedIn newUser, _ ->
       { model with User = Some newUser }
