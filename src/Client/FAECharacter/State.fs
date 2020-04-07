@@ -7,6 +7,7 @@ open Elmish.Helper
 open CharacterHelper
 
 open Domain.Campaign
+open Domain.Characters
 open FAECharacter.Types
 open Fable.Core
 
@@ -30,7 +31,12 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
             Approaches = AbilityType.Default }
         |> withoutCommands
 
-     | ToggleCustomApproaches ->
+    | ResetCharacter ->
+        { currentModel with
+            Character = createFAECharacter currentModel.Campaign }
+        |> withoutCommands
+
+    | ToggleCustomApproaches ->
         { currentModel with
             Approaches = toggleAbilityType currentModel.Approaches }
         |> withoutCommands

@@ -87,9 +87,16 @@ let debug model =
             Html.div (sprintf "%A" character)
         ]
 
+let resetView dispatch model =
+    match model.Character with
+    | None ->
+        resetButton "Reset campaign" (fun _ -> ResetCampaign |> dispatch)
+    | Some _ ->
+        resetButton "Reset character" (fun _ -> ResetCharacter |> dispatch )
+
 let view dispatch model =
     [
-        resetCampaign (fun _ -> ResetCampaign |> dispatch)
+        resetView dispatch model
         toggleCustomSkills dispatch model
         customiseSkills dispatch model
         yield! debug model

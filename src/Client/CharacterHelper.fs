@@ -8,12 +8,12 @@ open Domain.Campaign
 open Icons
 open Elmish.Common
 
-let resetCampaign (handler: MouseEvent -> unit) =
+let resetButton (buttonText: string) (handler: MouseEvent -> unit) =
     Bulma.level [
         Bulma.levelItem [
             text.hasTextCentered
             prop.children [
-                imgButton "Reset campaign" fa.trash [
+                imgButton buttonText fa.trash [
                     button.isDanger
                     prop.onClick handler
                 ]

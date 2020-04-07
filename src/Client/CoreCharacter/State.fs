@@ -7,6 +7,7 @@ open Elmish.Helper
 open CharacterHelper
 
 open Domain.Campaign
+open Domain.Characters
 open CoreCharacter.Types
 
 let init (user: UserData) : Model * Cmd<Msg> =
@@ -28,6 +29,11 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
             Character = None
             NewSkill = None
             Skills = AbilityType.Default }
+        |> withoutCommands
+
+    | ResetCharacter ->
+        { currentModel with
+            Character = createCoreCharacter currentModel.Campaign }
         |> withoutCommands
 
      | ToggleCustomSkills ->

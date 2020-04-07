@@ -14,6 +14,7 @@ type Model = {
 
 type Msg =
     | ResetCampaign
+    | ResetCharacter
     | ToggleCustomApproaches
     | RenameApproach of string * string
     | InputNewApproach

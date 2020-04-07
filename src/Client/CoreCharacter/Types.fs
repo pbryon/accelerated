@@ -14,6 +14,7 @@ type Model = {
 
 type Msg =
     | ResetCampaign
+    | ResetCharacter
     | ToggleCustomSkills
     | RenameSkill of string * string
     | InputNewSkill

@@ -66,11 +66,11 @@ let private navbarEnd =
     ]
 
 let view dispatch user currentPage =
-    Bulma.container [
-        container.isFullHd
+    Bulma.navbar [
+        navbar.isPrimary
         prop.children [
-            Bulma.navbar [
-                navbar.isPrimary
+            Bulma.container [
+                container.isFluid
                 prop.children [
                     Bulma.navbarBrand [
                         Bulma.navbarItemA [
@@ -88,4 +88,3 @@ let view dispatch user currentPage =
             ]
         ]
     ]
-    |> Html.div

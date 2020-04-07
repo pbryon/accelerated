@@ -16,22 +16,26 @@ type FateCoreCharacter = {
 }
 
 let createCoreCharacter campaign =
-    let aspects = createAspects 5
-    let skills = createSkills campaign.SkillLevel campaign.SkillList
-    let stress  = FateCore.createStressBoxes skills
-    let stunts = FateCore.createStunts campaign.Stunts
-    {
-        Name = CharacterName ""
-        Player = PlayerName ""
-        Aspects = aspects
-        Stress = stress
-        Skills = skills
-        Stunts = stunts
-        Refresh = campaign.Refresh
-    }
+    match campaign with
+    | None ->
+        None
+    | Some c->
+        let aspects = createAspects 5
+        let skills = createSkills c.SkillLevel c.SkillList
+        let stress  = FateCore.createStressBoxes skills
+        let stunts = FateCore.createStunts c.Stunts
+        Some {
+            Name = CharacterName ""
+            Player = PlayerName ""
+            Aspects = aspects
+            Stress = stress
+            Skills = skills
+            Stunts = stunts
+            Refresh = c.Refresh
+        }
 
 let createDefaultCoreCharacter =
-    createCoreCharacter defaultCoreCampaign
+    createCoreCharacter (Some defaultCoreCampaign)
 
 type FateAcceleratedCharacter = {
         Name: CharacterName
@@ -44,22 +48,27 @@ type FateAcceleratedCharacter = {
     }
 
 let createFAECharacter campaign =
-    let aspects = createAspects 5
-    let approaches = createApproaches campaign.ApproachLevel campaign.ApproachList
-    let stress = FateAccelerated.createStressBoxes campaign.StressTracks campaign.StressBoxType campaign.HighestStressBox
-    let stunts = FateAccelerated.createStunts campaign.Stunts
-    {
-        Name = CharacterName ""
-        Player = PlayerName ""
-        Aspects = aspects
-        Approaches = approaches
-        Stress = stress
-        Stunts = stunts
-        Refresh = campaign.Refresh
-    }
+    match campaign with
+    | None ->
+        None
+
+    | Some c ->
+        let aspects = createAspects 5
+        let approaches = createApproaches c.ApproachLevel c.ApproachList
+        let stress = FateAccelerated.createStressBoxes c.StressTracks c.StressBoxType c.HighestStressBox
+        let stunts = FateAccelerated.createStunts c.Stunts
+        Some {
+            Name = CharacterName ""
+            Player = PlayerName ""
+            Aspects = aspects
+            Approaches = approaches
+            Stress = stress
+            Stunts = stunts
+            Refresh = c.Refresh
+        }
 
 let createDefaultFateAcceleratedCharacter =
-    createFAECharacter defaultFAECampaign
+    createFAECharacter (Some defaultFAECampaign)
 
 type PlayerCharacter =
     | Core of FateCoreCharacter
