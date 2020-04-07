@@ -16,7 +16,7 @@ let toggleCustomApproaches dispatch model =
     colLayout [
         labelCol [ Bulma.label "Approaches:" ]
         {
-            Size = [ column.is4; column.isOffset1 ]
+            Size = [ column.is4 ]
             Align = style.textAlign.left
             Content =
                 buttonGroup [
@@ -53,7 +53,7 @@ let customiseApproaches dispatch model =
             | None -> []
             | Some campaign -> campaign.ApproachList
 
-        let showInputButton = newItemButton "Approach" model.NewApproach inputApproach
+        let showInputButton = newItemButton model.NewApproach inputApproach
         let inputFields = newItemInputs "Approach" model.NewApproach changeNewApproach addApproach
         let textBoxes = abilityTextBoxes approaches textChanged
 

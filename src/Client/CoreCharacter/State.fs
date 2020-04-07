@@ -39,7 +39,8 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
 
      | ToggleCustomSkills ->
         { currentModel with
-            Skills = toggleAbilityType currentModel.Skills }
+            Skills = toggleAbilityType currentModel.Skills
+            NewSkill = None }
         |> withoutCommands
 
     | RenameSkill (oldName, newName) ->

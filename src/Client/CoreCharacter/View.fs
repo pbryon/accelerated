@@ -16,7 +16,7 @@ let toggleCustomSkills dispatch model =
     colLayout [
         labelCol [ Bulma.label "Skills:" ]
         {
-            Size = [ column.is4; column.isOffset1 ]
+            Size = [ column.is4 ]
             Align = style.textAlign.left
             Content =
                 buttonGroup [
@@ -53,7 +53,7 @@ let customiseSkills dispatch model =
             | None -> []
             | Some campaign -> campaign.SkillList
 
-        let showInputButton = newItemButton "Skill" model.NewSkill inputSkill
+        let showInputButton = newItemButton model.NewSkill inputSkill
         let inputFields = newItemInputs "Skill" model.NewSkill changeNewSkill addSkill
         let textBoxes = abilityTextBoxes skills textChanged
 
@@ -124,6 +124,9 @@ let view dispatch model =
         toggleCustomSkills dispatch model
         customiseSkills dispatch model
         adjustRefresh dispatch model
+        // Add stunts:
+        // - free stunts
+        // - maximum number of stunts
         yield! debug model
     ]
     |> box (getDocTitle model)

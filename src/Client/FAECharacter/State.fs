@@ -38,7 +38,8 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
 
     | ToggleCustomApproaches ->
         { currentModel with
-            Approaches = toggleAbilityType currentModel.Approaches }
+            Approaches = toggleAbilityType currentModel.Approaches
+            NewApproach = None }
         |> withoutCommands
 
     | RenameApproach (oldName, newName) ->

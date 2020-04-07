@@ -35,7 +35,7 @@ let private createButton (item: ButtonState) : ReactElement =
 let buttonGroup (items: ButtonState list) =
     [
         Bulma.buttons [
-            buttons.isCentered
+            //buttons.isCentered
             buttons.hasAddons
             prop.children (items |> List.map createButton)
         ]
@@ -83,7 +83,7 @@ let imgButton (text: string) icon (props: IReactProperty list) =
         yield! props
         prop.children [
             fontAwesome icon
-            Html.span text
+            if text = "" then Html.none else Html.span text
         ]
     ]
 

@@ -53,17 +53,16 @@ let abilityTextBoxes (abilities: string list) (onTextChange: string -> string ->
     abilities
     |> List.map (abilityTextBox onTextChange)
 
-let newItemButton (itemType: string) (currentValue: string option) (onAdd: MouseEvent -> unit) =
+let newItemButton (currentValue: string option) (onAdd: MouseEvent -> unit) =
     match currentValue with
     | Some _ ->
         Html.none
 
     | None ->
-        let text = sprintf "Add new %s" itemType
         Bulma.column [
             column.is4
             prop.children [
-                imgButton text fa.plus [
+                imgButton "Skill" fa.plus [
                     button.isInfo
                     prop.onClick onAdd
                     prop.style [ style.marginTop 5 ]
