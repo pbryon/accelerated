@@ -3,9 +3,9 @@ module CoreCharacter.View
 open Feliz
 open Feliz.Bulma
 
-open Elmish.Common
+open App.Views.Common
 
-open CharacterHelper
+open Characters.Common
 open CoreCharacter.Types
 open Domain.Campaign
 

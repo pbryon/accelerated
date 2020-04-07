@@ -1,4 +1,4 @@
-module Elmish.Common
+module App.Views.Common
 
 open Feliz
 open Feliz.Bulma
@@ -8,7 +8,7 @@ let box (title: string) (children: List<ReactElement>) =
     let title3 = Bulma.title3 title
     Bulma.box [
         prop.className "main-box"
-        prop.style [ style.marginTop 10 ]
+        prop.style [ style.marginTop 10; style.padding 15 ]
         prop.children [
             Bulma.content [
                 text.hasTextCentered

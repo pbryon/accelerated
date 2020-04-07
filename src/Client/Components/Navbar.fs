@@ -4,9 +4,9 @@ open Feliz
 open Feliz.Bulma
 
 open Global
-open Icons
+open App.Icons
 open App.Types
-open Elmish.Common
+open App.Views.Common
 
 let private isMenuItemActive page currentPage =
     match currentPage with

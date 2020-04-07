@@ -4,7 +4,7 @@ open Elmish
 
 open Global
 open Elmish.Helper
-open CharacterHelper
+open Characters.Common
 
 open Domain.Campaign
 open Domain.Characters

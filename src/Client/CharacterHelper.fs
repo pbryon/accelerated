@@ -1,12 +1,12 @@
-module CharacterHelper
+module Characters.Common
 
 open Feliz
 open Feliz.Bulma
 open Browser.Types
 
 open Domain.Campaign
-open Icons
-open Elmish.Common
+open App.Icons
+open App.Views.Common
 
 let resetButton (buttonText: string) (handler: MouseEvent -> unit) =
     Bulma.level [

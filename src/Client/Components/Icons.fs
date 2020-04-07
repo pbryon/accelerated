@@ -1,4 +1,4 @@
-module Icons
+module App.Icons
 
 open Feliz
 open Feliz.Bulma
