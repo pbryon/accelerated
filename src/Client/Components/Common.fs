@@ -56,7 +56,7 @@ let private createColumn (item: ColumnDefinition) =
 
 let labelCol content =
     {
-        Size = [ column.is3; column.isOffset1 ]
+        Size = [ column.is2; column.isOffset1 ]
         Align = style.textAlign.left
         Content = content
     }

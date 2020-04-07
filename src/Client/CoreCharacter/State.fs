@@ -9,6 +9,7 @@ open Characters.Common
 open Domain.Campaign
 open Domain.Characters
 open CoreCharacter.Types
+open Domain.System
 
 let init (user: UserData) : Model * Cmd<Msg> =
     {
@@ -89,3 +90,17 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
                     NewSkill = None
                 }
                 |> withoutCommands
+
+    | SetRefresh value ->
+        match currentModel.Campaign with
+        | None ->
+            currentModel
+            |> withoutCommands
+
+        | Some campaign ->
+            { currentModel with
+                Campaign = Some {
+                    // TODO: add type constraint for posint
+                    campaign with Refresh = (Refresh value)
+                }}
+            |> withoutCommands

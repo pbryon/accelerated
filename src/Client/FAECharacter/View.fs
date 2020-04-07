@@ -8,6 +8,7 @@ open App.Views.Common
 open Characters.Common
 open FAECharacter.Types
 open Domain.Campaign
+open Domain.System
 
 let toggleCustomApproaches dispatch model =
     let toggleCustomApproaches = (fun _ -> ToggleCustomApproaches |> dispatch)
@@ -15,7 +16,7 @@ let toggleCustomApproaches dispatch model =
     colLayout [
         labelCol [ Bulma.label "Approaches:" ]
         {
-            Size = [ column.is4 ]
+            Size = [ column.is4; column.isOffset1 ]
             Align = style.textAlign.left
             Content =
                 buttonGroup [
@@ -94,11 +95,35 @@ let resetView dispatch model =
     | Some _ ->
         resetButton "Reset character" (fun _ -> ResetCharacter |> dispatch )
 
+let adjustRefresh dispatch model =
+    match model.Campaign with
+    | None  ->
+        Html.none
+
+    | Some campaign ->
+        let setRefresh value = (fun _ -> SetRefresh value |> dispatch)
+        let refreshIs value = campaign.Refresh = (Refresh value)
+
+        let buttons =
+            [0 .. 10]
+            |> List.map (fun value ->
+                refreshButton value (refreshIs value) (setRefresh value))
+
+        colLayout [
+            labelCol [ Bulma.label "Refresh:" ]
+            {
+                Size = [ column.is6]
+                Align = style.textAlign.left
+                Content = buttonGroup buttons
+            }
+        ]
+
 let view dispatch model =
     [
         resetView dispatch model
         toggleCustomApproaches dispatch model
         customiseApproaches dispatch model
+        adjustRefresh dispatch model
         yield! debug model
     ]
     |> box (getDocTitle model)

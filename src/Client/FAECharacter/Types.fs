@@ -20,3 +20,4 @@ type Msg =
     | InputNewApproach
     | UpdateNewApproach of string
     | AddNewApproach
+    | SetRefresh of int

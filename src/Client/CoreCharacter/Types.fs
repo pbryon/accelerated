@@ -20,3 +20,4 @@ type Msg =
     | InputNewSkill
     | UpdateNewSkill of string
     | AddNewSkill
+    | SetRefresh of int

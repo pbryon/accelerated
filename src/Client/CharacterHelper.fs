@@ -11,7 +11,6 @@ open App.Views.Common
 let resetButton (buttonText: string) (handler: MouseEvent -> unit) =
     Bulma.level [
         Bulma.levelItem [
-            text.hasTextCentered
             prop.children [
                 imgButton buttonText fa.trash [
                     button.isDanger
@@ -102,3 +101,14 @@ let newItemInputs
                 ]
             ]
         ]
+
+let refreshButton (value: int) (isActive: bool) (onClick: MouseEvent -> unit) =
+    {
+        Text =
+            if value = 0
+            then "None"
+            else sprintf "%i" value
+        Active = isActive
+        Color = color.isPrimary
+        OnClick = onClick
+    }
