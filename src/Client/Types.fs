@@ -5,8 +5,7 @@ open Global
 [<RequireQualifiedAccess>]
 type CurrentPage =
     | Index
-    | CoreCharacter of CoreCharacter.Types.Model
-    | FAECharacter of FAECharacter.Types.Model
+    | CampaignCreation of Campaign.Types.Model
 
 type Model = {
     User: UserData option
@@ -14,8 +13,7 @@ type Model = {
 }
 
 type Msg =
-    | CoreCharacterMsg of CoreCharacter.Types.Msg
-    | FAECharacterMsg of FAECharacter.Types.Msg
+    | CampaignMsg of Campaign.Types.Msg
     | LoggedIn of UserData
     | LoggedOut
     | Logout

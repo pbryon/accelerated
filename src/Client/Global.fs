@@ -2,10 +2,11 @@ module Global
 
 open Elmish.UrlParser
 open Domain.Campaign
+open Domain.System
 
 type UserData =
   {
-    UserName : string
+    UserName : PlayerName
     CampaignId: CampaignId
     //Token : Server.AuthTypes.JWT // TODO add
   }
@@ -13,21 +14,18 @@ type UserData =
 [<RequireQualifiedAccess>]
 type Page =
     | Index
-    | CoreCharacter
-    | FAECharacter
+    | CharacterCreation
 
 let toHash page =
   match page with
   | Page.Index -> "#"
-  | Page.CoreCharacter -> "#core-character"
-  | Page.FAECharacter -> "#fae-character"
+  | Page.CharacterCreation -> "#characters"
 
 let private pageParser: Parser<Page -> Page, _> =
     oneOf
         [
             map Page.Index top
-            map Page.CoreCharacter (s "core-character")
-            map Page.FAECharacter (s "fae-character")
+            map Page.CharacterCreation (s "characters")
         ]
 
 let urlParser location =

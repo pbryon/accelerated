@@ -9,6 +9,7 @@ open Global
 open App.Types
 open Domain.Campaign
 open System
+open Domain.System
 
 let loadUser () : UserData option =
 //   let userDecoder = Decode.Auto.generateDecoder<UserData>()
@@ -17,7 +18,7 @@ let loadUser () : UserData option =
 //   | Error _ -> None
     let guid = Guid.NewGuid()
     Some {
-        UserName = "Jos"
+        UserName = (PlayerName "Jos")
         CampaignId = (CampaignId guid)
     }
 
@@ -35,22 +36,12 @@ let urlUpdate (result : Page option) model =
         { model with CurrentPage = CurrentPage.Index}
         |> withoutCommands
 
-    | Some Page.CoreCharacter ->
+    | Some Page.CharacterCreation ->
         match model.User with
         | Some user ->
-            let submodel,cmd = CoreCharacter.State.init user
-            { model with CurrentPage = CurrentPage.CoreCharacter submodel }
-            |> withCommand (Cmd.map CoreCharacterMsg cmd)
-
-        | None ->
-            model |> navigateTo Page.Index
-
-    | Some Page.FAECharacter ->
-        match model.User with
-        | Some user ->
-            let submodel,cmd = FAECharacter.State.init user
-            { model with CurrentPage = CurrentPage.FAECharacter submodel }
-            |> withCommand (Cmd.map FAECharacterMsg cmd)
+            let submodel, cmd = Campaign.State.init user
+            { model with CurrentPage = CurrentPage.CampaignCreation submodel }
+            |> withCommand (Cmd.map CampaignMsg cmd)
 
         | None ->
             model |> navigateTo Page.Index
@@ -72,21 +63,16 @@ let private deleteUserCmd =
 
 let update msg model =
     match msg, model.CurrentPage with
-    | CoreCharacterMsg msg, CurrentPage.CoreCharacter submodel ->
-        let (character, characterCmd) = CoreCharacter.State.update msg submodel
-        model
-        |> withCurrentPage (CurrentPage.CoreCharacter character)
-        |> withCommand (Cmd.map CoreCharacterMsg characterCmd)
+    | CampaignMsg msg, CurrentPage.CampaignCreation submodel ->
+        let (campaign, campaignCmd) = Campaign.State.update msg submodel
 
-    | FAECharacterMsg msg, CurrentPage.FAECharacter submodel ->
-        let (character, characterCmd) = FAECharacter.State.update msg submodel
         model
-        |> withCurrentPage (CurrentPage.FAECharacter character)
-        |> withCommand (Cmd.map FAECharacterMsg characterCmd)
+        |> withCurrentPage (CurrentPage.CampaignCreation campaign)
+        |> withCommand (Cmd.map CampaignMsg campaignCmd)
 
     | LoggedIn newUser, _ ->
-      { model with User = Some newUser }
-      |> navigateTo Page.Index
+        { model with User = Some newUser }
+        |> navigateTo Page.Index
 
     | LoggedOut, _ ->
         { model with User = None }
@@ -94,7 +80,9 @@ let update msg model =
         |> navigateTo Page.Index
 
     | Logout, _ ->
-        model |> withCommand deleteUserCmd
+        model
+        |> withCommand deleteUserCmd
 
     | _, _ ->
-      model |> withoutCommands
+        model
+        |> withoutCommands

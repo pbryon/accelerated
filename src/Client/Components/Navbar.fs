@@ -6,17 +6,14 @@ open Feliz.Bulma
 open Global
 open App.Icons
 open App.Types
-open App.Views.Common
+open App.Views.Buttons
 
 let private isMenuItemActive page currentPage =
     match currentPage with
     | CurrentPage.Index _ when page = Page.Index ->
         [ navbarItem.isActive ]
 
-    | CurrentPage.CoreCharacter _ when page = Page.CoreCharacter ->
-        [ navbarItem.isActive ]
-
-    | CurrentPage.FAECharacter _ when page = Page.FAECharacter ->
+    | CurrentPage.CampaignCreation _ when page = Page.CharacterCreation ->
         [ navbarItem.isActive ]
 
     | _ ->
@@ -39,14 +36,9 @@ let private isMenuItemActive page currentPage =
 let private navbarStart dispatch user currentPage =
     Bulma.navbarStart [
         Bulma.navbarItemA [
-            yield! isMenuItemActive Page.CoreCharacter currentPage
-            prop.href (toHash Page.CoreCharacter)
-            prop.text "Fate Core"
-        ]
-        Bulma.navbarItemA [
-            yield! isMenuItemActive Page.FAECharacter currentPage
-            prop.href (toHash Page.FAECharacter)
-            prop.text "Fate Accelerated"
+            yield! isMenuItemActive Page.CharacterCreation currentPage
+            prop.href (toHash Page.CharacterCreation)
+            prop.text "Characters"
         ]
         //viewLoginLogout dispatch user currentPage
     ]

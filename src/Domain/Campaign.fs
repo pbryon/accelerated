@@ -1,7 +1,6 @@
 module Domain.Campaign
 
 open System
-open Domain.System
 open Domain.FateCore
 open Domain.FateAccelerated
 

@@ -9,5 +9,8 @@ let withAdditionalCommand cmd (model, cmds) =
 let withCommand (cmds : Cmd<'a>) model =
   model, cmds
 
+let withMsg msg model =
+    model, Cmd.ofMsg msg
+
 let withoutCommands model =
   model, Cmd.none
