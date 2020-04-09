@@ -92,6 +92,12 @@ let update msg model =
             |> withCurrentPage (CurrentPage.CampaignCreation campaignModel)
             |> withCommand (Cmd.map CampaignMsg campaignCmd)
 
+    | CharacterMsg msg, CurrentPage.CharacterCreation submodel ->
+        let (character, characterCmd) = Character.State.update msg submodel
+        model
+        |> withCurrentPage (CurrentPage.CharacterCreation character)
+        |> withCommand (Cmd.map CharacterMsg characterCmd)
+
     | LoggedIn newUser, _ ->
         { model with User = Some newUser }
         |> navigateTo Page.Index
