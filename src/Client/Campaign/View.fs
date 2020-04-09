@@ -62,12 +62,6 @@ let stringifyStunt current =
     | None -> "Individual choice"
     | Some value -> sprintf "%i" value
 
-let private debug model =
-    [
-        Html.h3 "Model"
-        Html.div (sprintf "%A" model)
-    ]
-
 let private toggleCustomAbilities dispatch model =
     let toggleCustomSkills = (fun _ -> ToggleCustomAbilities |> dispatch)
     let text = abilityNamePlural model
@@ -219,10 +213,7 @@ let view dispatch model =
             adjustRefresh dispatch model
             selectFreeStunts dispatch model
             selectMaxStunts dispatch model
-            // Add stunts:
-            // - free stunts
-            // - maximum number of stunts
         ]
-        yield! debug model
+        yield! Debug.view model
    ]
    |> box ("Campaign creation")

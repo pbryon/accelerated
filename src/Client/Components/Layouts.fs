@@ -47,3 +47,16 @@ let fluidColLayout (elements: ReactElement list) =
         columns.isGapless
         prop.children elements
     ]
+
+[<RequireQualifiedAccess>]
+module Debug =
+    let private enableDebugMode = true
+
+    let view model =
+        if enableDebugMode
+        then
+        [
+            Html.h3 "Model"
+            Html.div (sprintf "%A" model)
+        ]
+        else []
