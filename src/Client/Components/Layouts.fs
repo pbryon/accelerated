@@ -54,9 +54,8 @@ module Debug =
 
     let view model =
         if enableDebugMode
-        then
-        [
-            Html.h3 "Model"
-            Html.div (sprintf "%A" model)
-        ]
+        then [
+                Html.h3 "Model"
+                Html.div (sprintf "%A" model)
+            ]
         else []

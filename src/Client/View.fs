@@ -18,6 +18,9 @@ let view model dispatch =
         | CurrentPage.CampaignCreation submodel ->
             Campaign.View.view (CampaignMsg >> dispatch) submodel
 
+        | CurrentPage.CharacterCreation submodel ->
+            Character.View.view (CharacterMsg >> dispatch) submodel
+
     [
         Navbar.View.view dispatch model.User model.CurrentPage
         Bulma.container [

@@ -15,6 +15,7 @@
         <Compile Include="Version.fs" />
         <Compile Include="Global.fs" />
         <Compile Include="Campaign/Types.fs" />
+        <Compile Include="Character/Types.fs" />
         <Compile Include="Types.fs" />
         <Compile Include="ElmishHelper.fs" />
         <Compile Include="Components/Icons.fs" />
@@ -24,6 +25,8 @@
         <Compile Include="Components/SafeComponents.fs" />
         <Compile Include="Campaign/State.fs" />
         <Compile Include="Campaign/View.fs" />
+        <Compile Include="Character/State.fs" />
+        <Compile Include="Character/View.fs" />
         <Compile Include="Index/View.fs" />
         <Compile Include="State.fs" />
         <Compile Include="View.fs" />

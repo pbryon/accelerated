@@ -4,6 +4,7 @@ open Feliz
 open Feliz.Bulma
 open Browser.Types
 
+open App.Icons
 open App.Views.Buttons
 open App.Views.Layouts
 
@@ -23,13 +24,13 @@ let private selectCampaignType dispatch model =
                     {
                         Text = "Fate Core"
                         Color = button.isPrimary
-                        Active = model.CampaignType = CampaignType.Core
+                        Active = model.CampaignType = Some CampaignType.Core
                         OnClick = (fun _ -> SelectCampaignType CampaignType.Core |> dispatch )
                     }
                     {
                         Text = "Fate Accelerated"
                         Color = button.isPrimary
-                        Active = model.CampaignType = CampaignType.FAE
+                        Active = model.CampaignType = Some CampaignType.FAE
                         OnClick = (fun _ -> SelectCampaignType CampaignType.FAE |> dispatch)
                     }
                 ]
@@ -202,17 +203,33 @@ let private selectMaxStunts dispatch model =
                 }
             ]
 
+let finishButton dispatch model =
+    colLayout [
+        labelCol [ Html.none ]
+        {
+            Size = [ column.is4 ]
+            Align = style.textAlign.left
+            Content = [
+                imgButtonRight "Create character" Fa.chevronRight [
+                    prop.onClick (fun _ -> FinishClicked |> dispatch)
+                    prop.disabled (not (isDone model))
+                ]
+            ]
+        }
+    ]
+
 let view dispatch model =
    [
         resetButton "Reset campaign" (fun _ -> ResetCampaign |> dispatch)
         selectCampaignType dispatch model
-        if model.CampaignType <> CampaignType.NotSelected then
+        if model.CampaignType.IsSome then
             yield! [
             toggleCustomAbilities dispatch model
             customiseAbilities dispatch model
             adjustRefresh dispatch model
             selectFreeStunts dispatch model
             selectMaxStunts dispatch model
+            finishButton dispatch model
         ]
         yield! Debug.view model
    ]

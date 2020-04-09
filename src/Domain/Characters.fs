@@ -23,7 +23,7 @@ let createCoreCharacter campaign =
         let aspects = createAspects 5
         let skills = createSkills c.SkillLevel c.SkillList
         let stress  = FateCore.createStressBoxes skills
-        let stunts = FateCore.createStunts c.Stunts
+        let stunts = FateCore.createStunts c.FreeStunts
         Some {
             Name = CharacterName ""
             Player = PlayerName ""
@@ -56,7 +56,7 @@ let createFAECharacter campaign =
         let aspects = createAspects 5
         let approaches = createApproaches c.ApproachLevel c.ApproachList
         let stress = FateAccelerated.createStressBoxes c.StressTracks c.StressBoxType c.HighestStressBox
-        let stunts = FateAccelerated.createStunts c.Stunts
+        let stunts = FateAccelerated.createStunts c.FreeStunts
         Some {
             Name = CharacterName ""
             Player = PlayerName ""

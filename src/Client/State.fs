@@ -1,5 +1,7 @@
 module App.State
 
+open System
+
 open Elmish
 open Elmish.Helper
 open Elmish.Navigation
@@ -8,7 +10,6 @@ open Fable.Core
 open Global
 open App.Types
 open Domain.Campaign
-open System
 open Domain.System
 
 let loadUser () : UserData option =
@@ -36,7 +37,7 @@ let urlUpdate (result : Page option) model =
         { model with CurrentPage = CurrentPage.Index}
         |> withoutCommands
 
-    | Some Page.CharacterCreation ->
+    | Some Page.CampaignCreation ->
         match model.User with
         | Some user ->
             let submodel, cmd = Campaign.State.init user
@@ -45,6 +46,17 @@ let urlUpdate (result : Page option) model =
 
         | None ->
             model |> navigateTo Page.Index
+
+    | Some Page.CharacterCreation ->
+        match model.User with
+        | Some user ->
+            let submodel, cmd = Character.State.init user None
+            { model with CurrentPage = CurrentPage.CharacterCreation submodel }
+            |> withCommand (Cmd.map CharacterMsg cmd)
+
+        | None ->
+            model |> navigateTo Page.Index
+
 
 let init result : Model * Cmd<Msg> =
     let user : UserData option = loadUser ()
@@ -64,11 +76,21 @@ let private deleteUserCmd =
 let update msg model =
     match msg, model.CurrentPage with
     | CampaignMsg msg, CurrentPage.CampaignCreation submodel ->
-        let (campaign, campaignCmd) = Campaign.State.update msg submodel
+        let (campaignModel, campaignCmd) = Campaign.State.update msg submodel
+        let isDone = defaultArg campaignModel.Finished false
 
-        model
-        |> withCurrentPage (CurrentPage.CampaignCreation campaign)
-        |> withCommand (Cmd.map CampaignMsg campaignCmd)
+        match (isDone, model.User) with
+        | true, Some user ->
+            let campaign = Campaign.Types.asCampaign campaignModel
+            let (character, characterCmd) = Character.State.init user (Some campaign)
+            model
+            |> withCurrentPage (CurrentPage.CharacterCreation character)
+            |> withCommand (Cmd.map CharacterMsg characterCmd)
+
+        | _, _ ->
+            model
+            |> withCurrentPage (CurrentPage.CampaignCreation campaignModel)
+            |> withCommand (Cmd.map CampaignMsg campaignCmd)
 
     | LoggedIn newUser, _ ->
         { model with User = Some newUser }

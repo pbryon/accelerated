@@ -14,19 +14,33 @@ type UserData =
 [<RequireQualifiedAccess>]
 type Page =
     | Index
+    | CampaignCreation
     | CharacterCreation
+
+[<RequireQualifiedAccess>]
+module Urls =
+    let charGen = "character-creation"
 
 let toHash page =
   match page with
   | Page.Index -> "#"
-  | Page.CharacterCreation -> "#characters"
+  | Page.CampaignCreation -> sprintf "#%s" Urls.charGen
+  | Page.CharacterCreation -> sprintf "#%s" Urls.charGen
 
 let private pageParser: Parser<Page -> Page, _> =
     oneOf
         [
             map Page.Index top
-            map Page.CharacterCreation (s "characters")
+            map Page.CampaignCreation (s Urls.charGen)
+            map Page.CharacterCreation (s Urls.charGen)
         ]
 
 let urlParser location =
   parseHash pageParser location
+
+let validate validation model =
+    model
+    |> Option.bind (fun model ->
+        if validation model
+        then Some model
+        else None)

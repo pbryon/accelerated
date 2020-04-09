@@ -16,6 +16,9 @@ let private isMenuItemActive page currentPage =
     | CurrentPage.CampaignCreation _ when page = Page.CharacterCreation ->
         [ navbarItem.isActive ]
 
+    | CurrentPage.CharacterCreation _ when page = Page.CharacterCreation ->
+        [ navbarItem.isActive ]
+
     | _ ->
         []
 
@@ -37,7 +40,7 @@ let private navbarStart dispatch user currentPage =
     Bulma.navbarStart [
         Bulma.navbarItemA [
             yield! isMenuItemActive Page.CharacterCreation currentPage
-            prop.href (toHash Page.CharacterCreation)
+            prop.href (toHash Page.CampaignCreation)
             prop.text "Characters"
         ]
         //viewLoginLogout dispatch user currentPage
@@ -49,7 +52,7 @@ let private navbarEnd =
             Bulma.field [
                 field.isGrouped
                 prop.children [
-                    imgButton "Source" fa.github [
+                    imgButton "Source" Fa.github [
                         prop.href "https://github.com/pbryon/accelerated"
                     ]
                 ]

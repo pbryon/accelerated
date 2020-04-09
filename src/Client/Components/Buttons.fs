@@ -41,11 +41,22 @@ let imgButton (text: string) icon (props: IReactProperty list) =
         ]
     ]
 
+let imgButtonRight (text: string) icon (props: IReactProperty list) =
+    Bulma.button [
+        yield! props
+        prop.children [
+            if text = "" then Html.none else Html.span text
+            Bulma.icon [
+                prop.classes [ icon ]
+            ]
+        ]
+    ]
+
 let resetButton (buttonText: string) (handler: MouseEvent -> unit) =
     Bulma.level [
         Bulma.levelItem [
             prop.children [
-                imgButton buttonText fa.trash [
+                imgButton buttonText Fa.trash [
                     button.isDanger
                     prop.onClick handler
                 ]
@@ -62,7 +73,7 @@ let newItemButton (newItemValue: string option) (onAdd: MouseEvent -> unit) =
         Bulma.column [
             column.is4
             prop.children [
-                imgButton "" fa.plus [
+                imgButton "" Fa.plus [
                     button.isInfo
                     prop.onClick onAdd
                     prop.style [ style.marginTop 5 ]
@@ -92,7 +103,7 @@ let newItemInputs
                     prop.onTextChange onTextChange
                     prop.style [ style.maxWidth (length.perc 60) ]
                 ]
-                imgButton "Add" fa.check [
+                imgButton "Add" Fa.check [
                     button.isInfo
                     prop.style [ style.marginLeft 10]
                     prop.disabled isEmpty

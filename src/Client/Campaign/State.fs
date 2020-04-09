@@ -12,18 +12,18 @@ open Types
 
 let private resetAbilities model =
     match model.CampaignType with
-    | CampaignType.NotSelected ->
+    | None ->
         { model with Abilities = [] }
-    | CampaignType.Core ->
+    | Some CampaignType.Core ->
         { model with Abilities = FateCore.defaultSkillList }
-    | CampaignType.FAE ->
+    | Some CampaignType.FAE ->
         { model with Abilities = FateAccelerated.defaultApproaches }
 
 let private resetRefresh model =
     match model.CampaignType with
-    | CampaignType.NotSelected ->
+    | None ->
         { model with Refresh = Refresh 0 }
-    | _ ->
+    | Some _ ->
         { model with Refresh = Refresh 3 }
 
 let private toggleAbilityType model =
@@ -57,13 +57,14 @@ let init (user: UserData) : Model * Cmd<Msg> =
     {
         Player = user.UserName
         CampaignId = user.CampaignId
-        CampaignType = CampaignType.NotSelected
+        CampaignType = None
         AbilityType = AbilityType.Default
         Abilities = []
         NewAbility = None
         Refresh = campaign.Refresh
         FreeStunts = None
         MaxStunts = None
+        Finished = None
     }
     |> withoutCommands
 
@@ -77,13 +78,10 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
 
     | SelectCampaignType selectedType ->
         match selectedType with
-        | CampaignType.NotSelected ->
-            currentModel
-            |> withMsg ResetCampaign
         | CampaignType.Core
         | CampaignType.FAE ->
             { currentModel with
-                CampaignType = selectedType }
+                CampaignType = Some selectedType }
             |> resetAbilities
             |> resetRefresh
             |> withoutCommands
@@ -134,4 +132,8 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
 
     | SetMaxStunts value ->
         { currentModel with MaxStunts = value }
+        |> withoutCommands
+
+    | FinishClicked ->
+        { currentModel with Finished = Some (isDone currentModel) }
         |> withoutCommands
