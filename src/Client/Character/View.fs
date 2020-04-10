@@ -3,7 +3,6 @@ module Character.View
 open Feliz
 open Feliz.Bulma
 
-
 open App.Views.Layouts
 open App.Views.Buttons
 open App.Icons
@@ -12,8 +11,6 @@ open Domain.System
 open Character.Types
 
 let setPlayerName dispatch model =
-    let playerName (PlayerName value) = value
-
     colLayout [
         labelCol [ Bulma.label "Player:" ]
         {
@@ -23,7 +20,7 @@ let setPlayerName dispatch model =
                 Bulma.textInput [
                     prop.name "PlayerName"
                     prop.placeholder "Player name"
-                    prop.defaultValue (playerName model.Player)
+                    prop.defaultValue (Convert.playerName model.Player)
                     prop.onTextChange (fun value -> SetPlayerName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                 ]
@@ -32,8 +29,6 @@ let setPlayerName dispatch model =
     ]
 
 let setCharacterName dispatch model =
-    let charName (CharacterName value) = value
-
     colLayout [
         labelCol [ Bulma.label "Character:" ]
         {
@@ -43,10 +38,69 @@ let setCharacterName dispatch model =
                 Bulma.textInput [
                     prop.name "CharacterName"
                     prop.placeholder "Character name"
-                    prop.defaultValue (charName model.CharacterName)
+                    prop.defaultValue (Convert.characterName model.CharacterName)
                     prop.onTextChange (fun value -> SetCharacterName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                 ]
+            ]
+        }
+    ]
+
+let private highConcept dispatch model =
+    let newHighConcept name = Aspect.HighConcept (AspectName name)
+    let existing = findAspectLike model (newHighConcept "")
+
+    match existing with
+    | Some (Aspect.HighConcept name) ->
+        addonGroup [
+            Bulma.button [
+                button.isPrimary
+                prop.text "High concept"
+                prop.style [ style.minWidth 150 ]
+            ]
+            Bulma.textInput [
+                prop.name "high-concept"
+                prop.placeholder "High Concept"
+                prop.defaultValue (Convert.aspectName name)
+                prop.onTextChange (newHighConcept >> UpdateAspect >> dispatch)
+                prop.style [ style.minWidth 300 ]
+            ]
+        ]
+    | _ ->
+        Html.none
+
+let private trouble dispatch model =
+    let newTrouble name = Aspect.Trouble (AspectName name)
+    let existing = findAspectLike model (newTrouble "")
+
+    match existing with
+    | Some (Aspect.Trouble name) ->
+        addonGroup [
+            Bulma.button [
+                button.isPrimary
+                prop.text "Trouble"
+                prop.style [ style.minWidth 150 ]
+            ]
+            Bulma.textInput [
+                prop.name "trouble"
+                prop.placeholder "Trouble"
+                prop.defaultValue (Convert.aspectName name)
+                prop.onTextChange (newTrouble >> UpdateAspect >> dispatch)
+                prop.style [ style.minWidth 300 ]
+            ]
+        ]
+    | _ ->
+        Html.none
+
+let private chooseAspects dispatch model =
+    colLayout [
+        labelCol [ Bulma.label "Aspects:" ]
+        {
+            Size = [ column.is8 ]
+            Align = style.textAlign.left
+            Content = [
+                highConcept dispatch model
+                trouble dispatch model
             ]
         }
     ]
@@ -58,7 +112,7 @@ let finishButton dispatch model =
             Size = [ column.is4 ]
             Align = style.textAlign.left
             Content = [
-                imgButton "Done" Fa.chevronRight [
+                imgButtonRight "Done" Fa.chevronRight [
                     prop.onClick (fun _ -> FinishClicked |> dispatch)
                     prop.disabled (not (isDone model))
                 ]
@@ -70,6 +124,7 @@ let view dispatch model =
     [
         setPlayerName dispatch model
         setCharacterName dispatch model
+        chooseAspects dispatch model
         finishButton dispatch model
         yield! Debug.view model
     ]

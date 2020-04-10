@@ -14,21 +14,27 @@ module Utils =
 
 type AspectName = AspectName of string
 
+type Phase =
+    | PhaseOne
+    | PhaseTwo
+    | PhaseThree
+
+[<RequireQualifiedAccess>]
 type Aspect =
 | HighConcept of AspectName
 | Trouble of AspectName
-| Other of AspectName
+| PhaseTrio of Phase * CharacterName * AspectName
+| Other of int * AspectName
 
 let private nextAspect =
     function
-    | 1 -> HighConcept (AspectName "")
-    | 2 -> Trouble (AspectName "")
-    | _ -> Other (AspectName "")
+    | 1 -> Aspect.HighConcept (AspectName "")
+    | 2 -> Aspect.Trouble (AspectName "")
+    | value -> Aspect.Other ((value - 2), AspectName "")
 
 let internal createAspects count =
     validateCount count
     |> List.map nextAspect
-
 
 type Rank =
 | Legendary
@@ -96,3 +102,9 @@ type StuntActivation =
 | Conflict
 | Day
 | Session
+
+[<RequireQualifiedAccess>]
+module Convert =
+    let aspectName (AspectName name) = name
+    let characterName (CharacterName name) = name
+    let playerName (PlayerName name) = name

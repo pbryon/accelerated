@@ -111,3 +111,12 @@ let newItemInputs
                 ]
             ]
         ]
+
+let addonGroup (items: ReactElement list) =
+    Bulma.field [
+        field.hasAddons
+        prop.children [
+            yield! items |> List.map (fun x ->
+                Bulma.control [ x] )
+        ]
+    ]

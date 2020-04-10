@@ -53,6 +53,7 @@ let asCampaign model : Campaign =
         Campaign.Core {
             defaultCoreCampaign with
                 SkillList = model.Abilities
+                Aspects = model.Aspects
                 Refresh = model.Refresh
                 FreeStunts = defaultArg model.FreeStunts 0
                 MaxStunts = model.MaxStunts
@@ -62,6 +63,7 @@ let asCampaign model : Campaign =
         Campaign.FAE {
             defaultFAECampaign with
                 ApproachList = model.Abilities
+                Aspects = model.Aspects
                 Refresh = model.Refresh
                 FreeStunts = defaultArg model.FreeStunts 0
                 MaxStunts = model.MaxStunts
@@ -71,19 +73,20 @@ let findAspect model aspect =
     model.Aspects
     |> List.tryFind (fun x -> x = aspect)
 
+let aspectLike aspect other =
+    match aspect with
+    | _ when aspect = other -> true
+
+    | ExtraAspects _ ->
+        match other with
+        | ExtraAspects _ -> true
+        | _ -> false
+
+    | _ -> false
+
 let findAspectLike model aspect =
     model.Aspects
-    |> List.tryFind (fun x ->
-        match x with
-        | HighConceptAndTrouble
-            when aspect = HighConceptAndTrouble -> true
-        | ExtraAspects _ ->
-            match aspect with
-            | ExtraAspects _ -> true
-            | _ -> false
-        | PhaseTrio
-            when aspect = PhaseTrio -> true
-        | _ -> false)
+    |> List.tryFind (fun x -> aspectLike aspect x)
 
 let isDone model =
     Some model

@@ -6,9 +6,25 @@ open Domain.FateAccelerated
 
 type CampaignId = CampaignId of Guid
 
+[<RequireQualifiedAccess>]
+type CampaignType =
+    | Core
+    | FAE
+
+[<RequireQualifiedAccess>]
+type AbilityType =
+    | Custom
+    | Default
+
+type AspectSelection =
+    | HighConceptAndTrouble
+    | ExtraAspects of int
+    | PhaseTrio
+
 type FateCoreCampaign = {
     SkillLevel: Rank
     SkillList: string list
+    Aspects: AspectSelection list
     StressTracks : StressType list
     StressBoxType: StressBoxType
     Refresh: Refresh
@@ -19,6 +35,7 @@ type FateCoreCampaign = {
 let defaultCoreCampaign = {
     SkillLevel = Mediocre;
     SkillList = defaultSkillList
+    Aspects = [ HighConceptAndTrouble; PhaseTrio ]
     StressTracks = [ Physical; Mental ]
     StressBoxType = Complex
     Refresh = Refresh 3
@@ -26,9 +43,11 @@ let defaultCoreCampaign = {
     MaxStunts = Some 3
 }
 
+
 type FateAcceleratedCampaign = {
     ApproachLevel: Rank
     ApproachList: string list
+    Aspects: AspectSelection list
     StressTracks : StressType list
     StressBoxType: StressBoxType
     HighestStressBox: int
@@ -40,6 +59,7 @@ type FateAcceleratedCampaign = {
 let defaultFAECampaign = {
     ApproachLevel = Mediocre
     ApproachList = defaultApproaches
+    Aspects = [ HighConceptAndTrouble; ExtraAspects 1 ]
     Refresh = Refresh 3
     StressTracks = [General]
     StressBoxType = Complex
@@ -49,21 +69,6 @@ let defaultFAECampaign = {
 }
 
 [<RequireQualifiedAccess>]
-type CampaignType =
-    | Core
-    | FAE
-
-[<RequireQualifiedAccess>]
-type AbilityType =
-    | Custom
-    | Default
-
-[<RequireQualifiedAccess>]
 type Campaign =
     | Core of FateCoreCampaign
     | FAE of FateAcceleratedCampaign
-
-type AspectSelection =
-    | HighConceptAndTrouble
-    | ExtraAspects of int
-    | PhaseTrio
