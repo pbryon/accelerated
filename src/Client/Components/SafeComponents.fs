@@ -1,26 +1,57 @@
 module SafeComponents.View
 
-open Fable.React
+open Feliz
 open Fable.React.Props
+
+let separate (sep: string) (items: ReactElement list) =
+    items
+    |> List.collect (fun x -> [
+        x
+        Html.text sep
+    ])
+    |> List.truncate (2 * items.Length - 1)
 
 let view =
     let components =
-        span [ ]
-           [ a [ Href "https://github.com/SAFE-Stack/SAFE-template" ]
-               [ str "SAFE  "
-                 str Version.template ]
-             str ", "
-             a [ Href "https://saturnframework.github.io" ] [ str "Saturn" ]
-             str ", "
-             a [ Href "http://fable.io" ] [ str "Fable" ]
-             str ", "
-             a [ Href "https://elmish.github.io" ] [ str "Elmish" ]
-             str ", "
-             a [ Href "https://fulma.github.io/Fulma" ] [ str "Fulma" ]
-           ]
+        [
+            Html.a [
+                prop.href "https://github.com/SAFE-Stack/SAFE-template"
+                prop.text (sprintf "SAFE %s" Version.template)
+            ]
+            Html.a [
+                prop.href "https://saturnframework.github.io"
+                prop.text "Saturn"
+            ]
+            Html.a [
+                prop.href "http://fable.io"
+                prop.text "Fable"
+            ]
+            Html.a [
+                prop.href "https://elmish.github.io"
+                prop.text "Elmish"
+            ]
+            Html.a [
+                prop.href "https://github.com/Zaid-Ajaj/Feliz"
+                prop.text "Feliz"
+            ]
+            Html.a [
+                prop.href "https://github.com/Dzoukr/Feliz.Bulma"
+                prop.text "Feliz.Bulma"
+            ]
+        ]
+        |> separate ", "
 
-    span [ ]
-        [ str "Version "
-          strong [ ] [ str Version.app ]
-          str " powered by: "
-          components ]
+    let version =
+        [
+            Html.text "Version"
+            Html.strong Version.app
+            Html.text "powered by: "
+        ]
+        |> separate " "
+
+    Html.span [
+        prop.children [
+            yield! version
+            yield! components
+        ]
+    ]
