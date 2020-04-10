@@ -62,3 +62,8 @@ type AbilityType =
 type Campaign =
     | Core of FateCoreCampaign
     | FAE of FateAcceleratedCampaign
+
+type AspectSelection =
+    | HighConceptAndTrouble
+    | ExtraAspects of int
+    | PhaseTrio

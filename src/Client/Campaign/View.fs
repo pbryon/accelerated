@@ -4,6 +4,7 @@ open Feliz
 open Feliz.Bulma
 open Browser.Types
 
+open Global
 open App.Icons
 open App.Views.Buttons
 open App.Views.Layouts
@@ -120,6 +121,46 @@ let private customiseAbilities dispatch model =
             }
         ]
 
+let private selectAspectCount dispatch model =
+    let numberButtons =
+        [ 1 .. 5 ]
+        |> List.map (fun x ->
+            {
+                Text = sprintf "+ %i" x
+                Active = findAspect model (ExtraAspects x) |> Option.isSome
+                Color = color.isPrimary
+                OnClick = (fun _ -> ToggleAspect (ExtraAspects x) |> dispatch )
+            })
+
+    colLayout [
+        labelCol [ Bulma.label "Aspects:"]
+        {
+            Size = [ column.is8 ]
+            Align = style.textAlign.left
+            Content = buttonGroup [
+                {
+                    Text = "High Concept"
+                    Active = true
+                    Color = color.isPrimary
+                    OnClick = (fun _ -> ())
+                }
+                {
+                    Text = "Trouble"
+                    Active = true
+                    Color = color.isPrimary
+                    OnClick = (fun _ -> ())
+                }
+                {
+                    Text = "Phase Trio"
+                    Active = findAspect model PhaseTrio |> Option.isSome
+                    Color = color.isPrimary
+                    OnClick = (fun _ -> ToggleAspect PhaseTrio |> dispatch)
+                }
+                yield! numberButtons
+            ]
+        }
+    ]
+
 let private adjustRefresh dispatch model =
     let refreshIs value = model.Refresh = (Refresh value)
 
@@ -226,6 +267,7 @@ let view dispatch model =
             yield! [
             toggleCustomAbilities dispatch model
             customiseAbilities dispatch model
+            selectAspectCount dispatch model
             adjustRefresh dispatch model
             selectFreeStunts dispatch model
             selectMaxStunts dispatch model

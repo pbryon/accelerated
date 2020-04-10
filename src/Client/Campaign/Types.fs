@@ -11,6 +11,7 @@ type Model = {
     AbilityType: AbilityType
     Abilities : string list
     NewAbility: string option
+    Aspects: AspectSelection list
     Refresh: Refresh
     FreeStunts: int option
     MaxStunts: int option
@@ -25,6 +26,8 @@ type Msg =
 | InputNewAbility
 | UpdateNewAbility of string
 | AddNewAbility
+| AddAspect of AspectSelection
+| ToggleAspect of AspectSelection
 | SetRefresh of int
 | SetFreeStunts of int option
 | SetMaxStunts of int option
@@ -64,9 +67,28 @@ let asCampaign model : Campaign =
                 MaxStunts = model.MaxStunts
         }
 
+let findAspect model aspect =
+    model.Aspects
+    |> List.tryFind (fun x -> x = aspect)
+
+let findAspectLike model aspect =
+    model.Aspects
+    |> List.tryFind (fun x ->
+        match x with
+        | HighConceptAndTrouble
+            when aspect = HighConceptAndTrouble -> true
+        | ExtraAspects _ ->
+            match aspect with
+            | ExtraAspects _ -> true
+            | _ -> false
+        | PhaseTrio
+            when aspect = PhaseTrio -> true
+        | _ -> false)
+
 let isDone model =
     Some model
     |> validate (fun x -> x.CampaignType.IsSome)
-    |> validate (fun x -> x.Abilities.Length <> 0)
+    |> validate (fun x -> x.Abilities.Length > 0)
+    |> validate (fun x -> x.Aspects.Length > 0)
     |> validate (fun x -> x.FreeStunts.IsSome)
     |> Option.isSome

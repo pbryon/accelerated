@@ -9,6 +9,28 @@ open Domain
 open Domain.Campaign
 open Domain.System
 open Types
+open Fable.Core
+
+let private initialAspects = [
+    HighConceptAndTrouble
+]
+
+let init (user: UserData) : Model * Cmd<Msg> =
+    let campaign = defaultCoreCampaign
+    {
+        Player = user.UserName
+        CampaignId = user.CampaignId
+        CampaignType = None
+        AbilityType = AbilityType.Default
+        Abilities = []
+        NewAbility = None
+        Aspects = initialAspects
+        Refresh = campaign.Refresh
+        FreeStunts = None
+        MaxStunts = None
+        Finished = None
+    }
+    |> withoutCommands
 
 let private resetAbilities model =
     match model.CampaignType with
@@ -25,6 +47,22 @@ let private resetRefresh model =
         { model with Refresh = Refresh 0 }
     | Some _ ->
         { model with Refresh = Refresh 3 }
+
+let private setInitialAspectSelection model =
+    let aspects =
+        match model.CampaignType with
+        | None -> []
+
+        | Some CampaignType.Core -> [
+            HighConceptAndTrouble
+            PhaseTrio
+            ]
+
+        | Some CampaignType.FAE -> [
+            HighConceptAndTrouble
+            ExtraAspects 1
+            ]
+    { model with Aspects = aspects }
 
 let private toggleAbilityType model =
     match model.AbilityType with
@@ -51,21 +89,31 @@ let private abilityExists (list: string list) (value: string) =
     |> List.tryFind (fun item -> item = value)
     |> Option.isSome
 
+let private addAspect model aspect =
+    let existing = findAspectLike model aspect
+    if existing.IsSome then
+        model
+    else
+        { model with Aspects = [ aspect ] |> List.append model.Aspects }
+    |> withoutCommands
 
-let init (user: UserData) : Model * Cmd<Msg> =
-    let campaign = defaultCoreCampaign
-    {
-        Player = user.UserName
-        CampaignId = user.CampaignId
-        CampaignType = None
-        AbilityType = AbilityType.Default
-        Abilities = []
-        NewAbility = None
-        Refresh = campaign.Refresh
-        FreeStunts = None
-        MaxStunts = None
-        Finished = None
-    }
+let private toggleAspects model aspect =
+    let existing = findAspectLike model aspect
+
+    if existing.IsNone then
+        { model with
+            Aspects = [ aspect ] |> List.append initialAspects }
+    else
+        JS.console.log (sprintf "Similar Aspect: %A" existing)
+        let aspects =
+            if existing.Value = aspect then
+                initialAspects
+            else
+                [ aspect ]
+                |> List.append model.Aspects
+                |> List.filter (fun x -> x <> existing.Value)
+        { model with Aspects = aspects }
+
     |> withoutCommands
 
 let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
@@ -84,6 +132,7 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
                 CampaignType = Some selectedType }
             |> resetAbilities
             |> resetRefresh
+            |> setInitialAspectSelection
             |> withoutCommands
 
      | ToggleCustomAbilities ->
@@ -121,6 +170,12 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
                     [ value ]
                     |> List.append currentModel.Abilities }
                 |> withoutCommands
+
+    | AddAspect aspect ->
+        addAspect currentModel aspect
+
+    | ToggleAspect aspect ->
+        toggleAspects currentModel aspect
 
     | SetRefresh value ->
         { currentModel with Refresh = (Refresh value)}
