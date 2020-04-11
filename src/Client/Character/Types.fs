@@ -100,32 +100,51 @@ let nextAspect model =
     let newName = AspectName ""
 
     match (model.Aspects |> List.last) with
-    | Aspect.HighConcept _ ->
-        Some (Aspect.Trouble (newName))
+    | Aspect.HighConcept _
     | Aspect.Trouble _ ->
-        match (usesPhaseTrio model, usesExtraAspects) with
-        | false, false ->
-            None
-        | true, _ ->
-            Some (Aspect.PhaseTrio (PhaseOne, newName))
-        | false, true ->
-            Some (Aspect.Other (1, newName))
+        None
 
     | Aspect.PhaseTrio (phase, _) ->
         match (phase, usesExtraAspects) with
-        | PhaseOne, _ ->
-            Some (Aspect.PhaseTrio (PhaseTwo, newName))
-        | PhaseTwo, _ ->
-            Some (Aspect.PhaseTrio (PhaseThree, newName))
         | PhaseThree, true ->
             Some (Aspect.Other (1, newName))
         | _, _ ->
             None
 
     | Aspect.Other (number, _) ->
-        if (number = aspectTotal model)
+        if (number = extraAspectTotal model)
         then None
         else Some (Aspect.Other (number + 1, newName))
+
+let private addPhaseTrioAspects model list =
+    if usesPhaseTrio model
+    then
+        [
+            Aspect.PhaseTrio (PhaseOne, AspectName "")
+            Aspect.PhaseTrio (PhaseTwo, AspectName "")
+            Aspect.PhaseTrio (PhaseThree, AspectName "")
+        ]
+        |> List.append list
+    else
+        list
+
+let private addExtraAspects model list =
+    match extraAspectTotal model with
+    | 0 -> list
+    | number ->
+        [ 1 .. number ]
+        |> List.map (fun x -> Aspect.Other(x, AspectName ""))
+        |> List.append list
+
+let addStartingAspects (model: Model) =
+    { model with
+        Aspects =
+            [
+                Aspect.HighConcept (AspectName "")
+                Aspect.Trouble (AspectName "")
+            ]
+            |> addPhaseTrioAspects model
+            |> addExtraAspects model }
 
 let isDone model =
     Some model

@@ -15,12 +15,10 @@ let init (user: UserData) (campaign: Campaign option): Model * Cmd<Msg> =
         CampaignId = user.CampaignId
         Player = user.UserName
         CharacterName = CharacterName ""
-        Aspects = [
-            Aspect.HighConcept (AspectName "")
-            Aspect.Trouble (AspectName "")
-        ]
+        Aspects = []
         Finished = None
     }
+    |> addStartingAspects
     |> withoutCommands
 
 let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
