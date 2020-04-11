@@ -3,6 +3,8 @@ module Campaign.Types
 open Global
 open Domain.System
 open Domain.Campaign
+open Domain.FateCore
+open Domain.FateAccelerated
 
 type Model = {
     Player: PlayerName
@@ -44,6 +46,18 @@ let abilityNamePlural model =
     | None -> "Abilities:"
     | Some CampaignType.Core -> "Skills:"
     | Some CampaignType.FAE -> "Approaches:"
+
+let abilityType campaign =
+    match campaign with
+    | Campaign.Core core ->
+        if core.SkillList = defaultSkillList
+        then AbilityType.Default
+        else AbilityType.Custom
+    | Campaign.FAE fae ->
+        if fae.ApproachList = defaultApproachList
+        then AbilityType.Default
+        else AbilityType.Custom
+
 
 let asCampaign model : Campaign =
     let campaign = defaultArg model.CampaignType CampaignType.Core

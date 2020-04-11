@@ -11,6 +11,7 @@ open Global
 open App.Types
 open Domain.Campaign
 open Domain.System
+open Fable.Core
 
 let loadUser () : UserData option =
 //   let userDecoder = Decode.Auto.generateDecoder<UserData>()
@@ -92,11 +93,21 @@ let update msg model =
             |> withCurrentPage (CurrentPage.CampaignCreation campaignModel)
             |> withCommand (Cmd.map CampaignMsg campaignCmd)
 
+
     | CharacterMsg msg, CurrentPage.CharacterCreation submodel ->
-        let (character, characterCmd) = Character.State.update msg submodel
-        model
-        |> withCurrentPage (CurrentPage.CharacterCreation character)
-        |> withCommand (Cmd.map CharacterMsg characterCmd)
+        match msg with
+        | Character.Types.Msg.BackToCampaignClicked user ->
+            let campaign = defaultArg submodel.Campaign (Campaign.Core defaultCoreCampaign)
+            let (campaignModel, campaignCmd) = Campaign.State.fromCampaign campaign user
+            model
+            |> withCurrentPage (CurrentPage.CampaignCreation campaignModel)
+            |> withCommand (Cmd.map CampaignMsg campaignCmd)
+
+        | _ ->
+            let (character, characterCmd) = Character.State.update msg submodel
+            model
+            |> withCurrentPage (CurrentPage.CharacterCreation character)
+            |> withCommand (Cmd.map CharacterMsg characterCmd)
 
     | LoggedIn newUser, _ ->
         { model with User = Some newUser }

@@ -58,7 +58,7 @@ type FateAcceleratedCampaign = {
 
 let defaultFAECampaign = {
     ApproachLevel = Mediocre
-    ApproachList = defaultApproaches
+    ApproachList = defaultApproachList
     Aspects = [ HighConceptAndTrouble; ExtraAspects 1 ]
     Refresh = Refresh 3
     StressTracks = [General]

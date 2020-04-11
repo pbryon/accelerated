@@ -9,7 +9,7 @@ type Approach = {
     Rank: Rank
 }
 
-let defaultApproaches = [
+let defaultApproachList = [
     "Careful";
     "Clever";
     "Flashy";

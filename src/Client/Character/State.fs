@@ -30,7 +30,6 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         |> withoutCommands
 
     | SetPlayerName value ->
-        JS.console.log (sprintf "Got player name: %s" value)
         { currentModel with Player = PlayerName value }
         |> withoutCommands
 
@@ -63,6 +62,10 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
                     then aspect
                     else x)
             { currentModel with Aspects = aspects }
+        |> withoutCommands
+
+    | BackToCampaignClicked _ ->
+        currentModel
         |> withoutCommands
 
     | FinishClicked ->

@@ -32,6 +32,31 @@ let init (user: UserData) : Model * Cmd<Msg> =
     }
     |> withoutCommands
 
+let fromCampaign (campaign: Campaign) (user: UserData): Model * Cmd<Msg> =
+    let (initial, cmd) = init user
+    let model = {
+        initial with
+            AbilityType = abilityType campaign
+    }
+    match campaign with
+    | Campaign.Core core ->
+        { model with
+            CampaignType = Some CampaignType.Core
+            Abilities = core.SkillList
+            Aspects = core.Aspects
+            Refresh = core.Refresh
+            FreeStunts = Some core.FreeStunts
+            MaxStunts = core.MaxStunts }
+    | Campaign.FAE fae ->
+        { model with
+            CampaignType = Some CampaignType.FAE
+            Abilities = fae.ApproachList
+            Aspects = fae.Aspects
+            Refresh = fae.Refresh
+            FreeStunts = Some fae.FreeStunts
+            MaxStunts = fae.MaxStunts }
+    |> withCommand cmd
+
 let private resetAbilities model =
     match model.CampaignType with
     | None ->
@@ -39,7 +64,7 @@ let private resetAbilities model =
     | Some CampaignType.Core ->
         { model with Abilities = FateCore.defaultSkillList }
     | Some CampaignType.FAE ->
-        { model with Abilities = FateAccelerated.defaultApproaches }
+        { model with Abilities = FateAccelerated.defaultApproachList }
 
 let private resetRefresh model =
     match model.CampaignType with
@@ -104,7 +129,6 @@ let private toggleAspects model aspect =
         { model with
             Aspects = [ aspect ] |> List.append initialAspects }
     else
-        JS.console.log (sprintf "Similar Aspect: %A" existing)
         let aspects =
             if existing.Value = aspect then
                 initialAspects

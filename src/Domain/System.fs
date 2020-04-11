@@ -23,7 +23,7 @@ type Phase =
 type Aspect =
 | HighConcept of AspectName
 | Trouble of AspectName
-| PhaseTrio of Phase * CharacterName * AspectName
+| PhaseTrio of Phase * AspectName
 | Other of int * AspectName
 
 let private nextAspect =

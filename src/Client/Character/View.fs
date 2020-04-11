@@ -3,6 +3,7 @@ module Character.View
 open Feliz
 open Feliz.Bulma
 
+open Global
 open App.Views.Layouts
 open App.Views.Buttons
 open App.Icons
@@ -105,13 +106,20 @@ let private chooseAspects dispatch model =
         }
     ]
 
-let finishButton dispatch model =
+let backAndFinishButtons dispatch model =
+    let userData = {
+        UserName = model.Player
+        CampaignId = model.CampaignId
+    }
     colLayout [
         labelCol [ Html.none ]
         {
             Size = [ column.is4 ]
             Align = style.textAlign.left
             Content = [
+                imgButton "Back" Fa.chevronLeft [
+                    prop.onClick (fun _ -> BackToCampaignClicked userData |> dispatch )
+                ]
                 imgButtonRight "Done" Fa.chevronRight [
                     prop.onClick (fun _ -> FinishClicked |> dispatch)
                     prop.disabled (not (isDone model))
@@ -125,7 +133,7 @@ let view dispatch model =
         setPlayerName dispatch model
         setCharacterName dispatch model
         chooseAspects dispatch model
-        finishButton dispatch model
+        backAndFinishButtons dispatch model
         yield! Debug.view model
     ]
     |> box "Character creation"

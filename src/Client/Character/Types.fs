@@ -19,6 +19,7 @@ type Msg =
     | SetCharacterName of string
     | AddAspect of Aspect
     | UpdateAspect of Aspect
+    | BackToCampaignClicked of UserData
     | FinishClicked
 
 let aspectLike fst snd =
@@ -35,9 +36,9 @@ let aspectLike fst snd =
         | Aspect.Trouble _ -> true
         | _ -> false
 
-    | Aspect.PhaseTrio (phase, _, _) ->
+    | Aspect.PhaseTrio (phase, _) ->
         match snd with
-        | Aspect.PhaseTrio (otherPhase, _, _)
+        | Aspect.PhaseTrio (otherPhase,  _)
             when phase = otherPhase -> true
         | _ -> false
 
