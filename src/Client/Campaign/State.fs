@@ -127,11 +127,14 @@ let private toggleAspects model aspect =
 
     if existing.IsNone then
         { model with
-            Aspects = [ aspect ] |> List.append initialAspects }
+            Aspects =
+                [ aspect ]
+                |> List.append model.Aspects }
     else
         let aspects =
             if existing.Value = aspect then
-                initialAspects
+                model.Aspects
+                |> List.filter (fun x -> x <> aspect)
             else
                 [ aspect ]
                 |> List.append model.Aspects
