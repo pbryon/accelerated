@@ -1,6 +1,7 @@
 module Campaign.Types
 
 open Global
+open Utils
 open Domain.System
 open Domain.Campaign
 open Domain.FateCore
@@ -83,9 +84,8 @@ let asCampaign model : Campaign =
                 MaxStunts = model.MaxStunts
         }
 
-let findAspect model aspect =
-    model.Aspects
-    |> List.tryFind (fun x -> x = aspect)
+let hasAspect model aspect =
+    contains model.Aspects aspect
 
 let aspectLike aspect other =
     match aspect with
@@ -99,8 +99,7 @@ let aspectLike aspect other =
     | _ -> false
 
 let findAspectLike model aspect =
-    model.Aspects
-    |> List.tryFind (fun x -> aspectLike aspect x)
+    findLike model.Aspects aspectLike aspect
 
 let isDone model =
     Some model

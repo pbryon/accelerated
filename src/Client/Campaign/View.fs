@@ -127,7 +127,7 @@ let private selectAspectCount dispatch model =
         |> List.map (fun x ->
             {
                 Text = sprintf "+ %i" x
-                Active = findAspect model (ExtraAspects x) |> Option.isSome
+                Active = hasAspect model (ExtraAspects x)
                 Color = color.isPrimary
                 OnClick = (fun _ -> ToggleAspect (ExtraAspects x) |> dispatch )
             })
@@ -152,7 +152,7 @@ let private selectAspectCount dispatch model =
                 }
                 {
                     Text = "Phase Trio"
-                    Active = findAspect model PhaseTrio |> Option.isSome
+                    Active = hasAspect model PhaseTrio
                     Color = color.isPrimary
                     OnClick = (fun _ -> ToggleAspect PhaseTrio |> dispatch)
                 }
