@@ -36,6 +36,9 @@ let labelCol content =
         Content = content
     }
 
+let emptyLabelCol =
+    labelCol []
+
 let colLayout (cols: ColumnDefinition list) =
     Bulma.columns [
         prop.children (cols |> List.map createColumn)

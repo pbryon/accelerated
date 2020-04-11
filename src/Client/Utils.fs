@@ -1,17 +1,17 @@
 module Utils
 
-let findItem list item =
+let findItem item list =
     list
     |> List.tryFind (fun x -> x = item)
 
-let findLike list (comparer: 'a -> 'a -> bool) item =
+let findBy (comparer: 'a -> 'a -> bool) item list =
     list
     |> List.tryFind (comparer item)
 
-let contains list item =
-    findItem list item
+let contains item list =
+    findItem item list
     |> Option.isSome
 
-let containsLike list (comparer: 'a -> 'a -> bool) item =
-    findLike list comparer item
+let containsLike (comparer: 'a -> 'a -> bool) item list =
+    findBy comparer item list
     |> Option.isSome

@@ -47,6 +47,9 @@ let setCharacterName dispatch model =
         }
     ]
 
+let aspectButtonWidth = style.width 150
+let aspectTextWidth = style.width 300
+
 let private highConcept dispatch model =
     let newHighConcept name = Aspect.HighConcept (AspectName name)
     let existing = findAspectLike model (newHighConcept "")
@@ -57,14 +60,14 @@ let private highConcept dispatch model =
             Bulma.button [
                 button.isPrimary
                 prop.text "High concept"
-                prop.style [ style.minWidth 150 ]
+                prop.style [ aspectButtonWidth ]
             ]
             Bulma.textInput [
                 prop.name "high-concept"
                 prop.placeholder "High Concept"
                 prop.defaultValue (Convert.aspectName name)
                 prop.onTextChange (newHighConcept >> UpdateAspect >> dispatch)
-                prop.style [ style.minWidth 300 ]
+                prop.style [ aspectTextWidth ]
             ]
         ]
     | _ ->
@@ -80,18 +83,93 @@ let private trouble dispatch model =
             Bulma.button [
                 button.isPrimary
                 prop.text "Trouble"
-                prop.style [ style.minWidth 150 ]
+                prop.style [ aspectButtonWidth ]
             ]
             Bulma.textInput [
                 prop.name "trouble"
                 prop.placeholder "Trouble"
                 prop.defaultValue (Convert.aspectName name)
                 prop.onTextChange (newTrouble >> UpdateAspect >> dispatch)
-                prop.style [ style.minWidth 300 ]
+                prop.style [ aspectTextWidth ]
             ]
         ]
     | _ ->
         Html.none
+
+let private phaseAspect dispatch model number =
+    let (phase, name) =
+        match number with
+        | 1 -> (PhaseOne, "Phase One")
+        | 2 -> (PhaseTwo, "Phase Two")
+        | 3 -> (PhaseThree, "Phase Three")
+        | _ -> failwithf "Unsupported phase number: %i" number
+
+    let newPhase phase text =
+        Aspect.PhaseTrio (phase, AspectName "")
+    let defaultAspect = newPhase phase ""
+    let existing = findAspectLike model defaultAspect
+
+    match existing with
+    | Some (Aspect.PhaseTrio (phase, aspectName)) ->
+        addonGroup [
+            Bulma.button [
+                button.isPrimary
+                prop.text name
+                prop.style [ aspectButtonWidth ]
+            ]
+            Bulma.textInput [
+                prop.name (sprintf "phase-%i" number)
+                prop.placeholder name
+                prop.defaultValue (Convert.aspectName aspectName)
+                prop.onTextChange (newPhase phase >> UpdateAspect >> dispatch)
+                prop.style [ aspectTextWidth ]
+            ]
+        ]
+
+    | _ -> Html.none
+
+let private phaseTrioAspects dispatch model =
+    if usesPhaseTrio model
+    then
+        [ 1 .. 3]
+        |> List.map (phaseAspect dispatch model)
+    else
+        []
+
+let otherAspect dispatch model number =
+    let newAspect number text =
+        Aspect.Other (number, AspectName text)
+    let defaultAspect = newAspect number ""
+    let existing = findAspectLike model defaultAspect
+
+    let start = aspectTotal model - extraAspectTotal model
+
+    match existing with
+    | Some (Aspect.Other (_, aspectName)) ->
+        addonGroup [
+            Bulma.button [
+                button.isPrimary
+                prop.text (sprintf "Aspect %i" (start + number))
+                prop.style [ aspectButtonWidth ]
+            ]
+            Bulma.textInput [
+                prop.name (sprintf "other-aspect-%i" number)
+                prop.placeholder "New Aspect"
+                prop.defaultValue (Convert.aspectName aspectName)
+                prop.onTextChange (newAspect number >> UpdateAspect >> dispatch)
+                prop.style [ aspectTextWidth ]
+            ]
+        ]
+
+    | _ -> Html.none
+
+let private otherAspects dispatch model =
+    match extraAspectTotal model with
+    | 0 ->
+        []
+    | total ->
+        [ 1 .. total ]
+        |> List.map (otherAspect dispatch model)
 
 let private chooseAspects dispatch model =
     colLayout [
@@ -102,11 +180,30 @@ let private chooseAspects dispatch model =
             Content = [
                 highConcept dispatch model
                 trouble dispatch model
+                yield! phaseTrioAspects dispatch model
+                yield! otherAspects dispatch model
             ]
         }
     ]
 
-let backAndFinishButtons dispatch model =
+let private addNextAspect dispatch model =
+    match nextAspect model with
+    | None -> Html.none
+    | Some aspect ->
+        colLayout [
+            emptyLabelCol
+            {
+                Size = [ column.is4 ]
+                Align = style.textAlign.left
+                Content = [
+                    imgButton "" Fa.plus [
+                        prop.onClick (fun _ -> AddAspect aspect |> dispatch)
+                    ]
+                ]
+            }
+        ]
+
+let private backAndFinishButtons dispatch model =
     let userData = {
         UserName = model.Player
         CampaignId = model.CampaignId
@@ -133,6 +230,7 @@ let view dispatch model =
         setPlayerName dispatch model
         setCharacterName dispatch model
         chooseAspects dispatch model
+        addNextAspect dispatch model
         backAndFinishButtons dispatch model
         yield! Debug.view model
     ]

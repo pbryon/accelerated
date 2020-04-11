@@ -85,7 +85,8 @@ let asCampaign model : Campaign =
         }
 
 let hasAspect model aspect =
-    contains model.Aspects aspect
+    model.Aspects
+    |> contains aspect
 
 let aspectLike aspect other =
     match aspect with
@@ -99,7 +100,8 @@ let aspectLike aspect other =
     | _ -> false
 
 let findAspectLike model aspect =
-    findLike model.Aspects aspectLike aspect
+    model.Aspects
+    |> findBy aspectLike aspect
 
 let isDone model =
     Some model
