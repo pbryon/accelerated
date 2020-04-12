@@ -15,6 +15,6 @@ $family-primary: 'Open Sans';
 // Bulma
 @import "~bulma/bulma";
 
-.label {
+.label, .field-label {
     margin-top: 6px;
 }

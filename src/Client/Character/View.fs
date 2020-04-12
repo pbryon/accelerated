@@ -10,6 +10,9 @@ open App.Icons
 
 open Domain.System
 open Character.Types
+open Character.Types.Aspects
+open Character.Types.Abilities
+open Fable.Core
 
 let setPlayerName dispatch model =
     let player = Convert.playerName model.Player
@@ -203,6 +206,72 @@ let private addNextAspect dispatch model =
             }
         ]
 
+let private rankButton ranks sortedAbilities rank =
+    let withSameRank list = list |> List.filter (fun x -> x = rank)
+
+    let count = (ranks |> withSameRank).Length
+    let used = sortedAbilities |> withSameRank
+
+    [1 .. count]
+    |> List.map (fun currentTotal ->
+        let isUsed = used.Length >= currentTotal
+        let isErrored = used.Length > count
+
+        {
+            Text = string rank
+            Active = not isUsed
+            Color =
+                if isErrored then
+                    button.isDanger
+                else
+                    button.isPrimary
+            OnClick = (fun _ -> ())
+        }
+    )
+
+
+let private rankSummary model =
+    let ranks = defaultRanks model
+    let sortedAbilities = sortAbilitiesByRank model
+
+    ranks
+    |> List.distinct
+    |> List.collect (rankButton ranks sortedAbilities)
+
+let private abilitySummary dispatch model =
+    let buttons = rankSummary model
+    Bulma.field [
+        field.isHorizontal
+        prop.children [
+            Bulma.fieldLabel [
+                Bulma.label [
+                    prop.text "Available ranks:"
+                    prop.style [
+                        style.fontWeight.normal
+                        style.display.inlineElement
+                    ]
+                ]
+            ]
+            Bulma.fieldBody [
+                yield! buttonGroup buttons
+            ]
+        ]
+    ]
+
+let private chooseAbilities dispatch model =
+    let abilityName = abilityNamePlural model
+
+    colLayout [
+        labelCol [ Bulma.label (abilityName + ":") ]
+        {
+            Size = [ column.is8 ]
+            Align = style.textAlign.left
+            Content = [
+                abilitySummary dispatch model
+            ]
+        }
+    ]
+
 let private backAndFinishButtons dispatch model =
     let userData = {
         UserName = model.Player
@@ -232,6 +301,7 @@ let view dispatch model =
         setCharacterName dispatch model
         chooseAspects dispatch model
         addNextAspect dispatch model
+        chooseAbilities dispatch model
         backAndFinishButtons dispatch model
         yield! Debug.view model
     ]

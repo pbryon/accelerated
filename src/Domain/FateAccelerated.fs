@@ -18,6 +18,13 @@ let defaultApproachList = [
     "Sneaky"
 ]
 
+let defaultApproachRanks =
+    [
+        yield! rankTimes 3 1
+        yield! rankTimes 2 2
+        yield! rankTimes 1 2
+    ]
+
 let createApproaches rank names =
     names
     |> List.map (fun name -> {

@@ -36,6 +36,10 @@ let internal createAspects count =
     validateCount count
     |> List.map nextAspect
 
+let internal rankTimes (rank: int) (times: int) =
+    [ 1.. times ]
+    |> List.map (fun _ -> rank)
+
 type Rank =
 | Legendary
 | Epic

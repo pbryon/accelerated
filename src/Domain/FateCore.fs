@@ -31,6 +31,14 @@ let defaultSkillList = [
     "Will"
 ]
 
+let defaultSkillRanks =
+    [
+        yield! rankTimes 4 1
+        yield! rankTimes 3 2
+        yield! rankTimes 2 3
+        yield! rankTimes 1 4
+    ]
+
 let createSkill rank name = {
     Name = SkillName name;
     Rank = rank;

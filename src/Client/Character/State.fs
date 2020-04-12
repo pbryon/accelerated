@@ -2,24 +2,28 @@ module Character.State
 
 open Elmish
 open Elmish.Helper
+open Fable.Core
 
 open Global
 open Domain.Campaign
-open Character.Types
 open Domain.System
-open Fable.Core
+
+open Character.Types
+open Character.Types.Aspects
+open Character.Types.Abilities
 
 let init (user: UserData) (campaign: Campaign option): Model * Cmd<Msg> =
-    JS.console.log "Init called"
     {
         Campaign = campaign
         CampaignId = user.CampaignId
         Player = user.UserName
         CharacterName = CharacterName ""
         Aspects = []
+        Abilities = []
         Finished = None
     }
     |> addStartingAspects
+    |> addAbilities
     |> withoutCommands
 
 let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
