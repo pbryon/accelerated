@@ -64,11 +64,7 @@ let private highConcept dispatch model =
     | Some (Aspect.HighConcept name) ->
         let aspectName = Convert.aspectName name
         addonGroup [
-            Bulma.button [
-                button.isPrimary
-                prop.text "High concept"
-                prop.style [ aspectButtonWidth ]
-            ]
+            addonButton "High Concept" aspectButtonWidth
             Bulma.textInput [
                 prop.name "high-concept"
                 prop.placeholder "High Concept"
@@ -90,11 +86,7 @@ let private trouble dispatch model =
     | Some (Aspect.Trouble name) ->
         let aspectName = Convert.aspectName name
         addonGroup [
-            Bulma.button [
-                button.isPrimary
-                prop.text "Trouble"
-                prop.style [ aspectButtonWidth ]
-            ]
+            addonButton "Trouble" aspectButtonWidth
             Bulma.textInput [
                 prop.name "trouble"
                 prop.placeholder "Trouble"
@@ -125,11 +117,7 @@ let private phaseAspect dispatch model number =
     | Some (Aspect.PhaseTrio (phase, name)) ->
         let aspectName = Convert.aspectName name
         addonGroup [
-            Bulma.button [
-                button.isPrimary
-                prop.text phaseName
-                prop.style [ aspectButtonWidth ]
-            ]
+            addonButton phaseName aspectButtonWidth
             Bulma.textInput [
                 prop.name (sprintf "phase-%i" number)
                 prop.placeholder phaseName
@@ -161,12 +149,9 @@ let otherAspect dispatch model number =
 
     match existing with
     | Some (Aspect.Other (_, aspectName)) ->
+        let text = sprintf "Aspect %i" (start + number)
         addonGroup [
-            Bulma.button [
-                button.isPrimary
-                prop.text (sprintf "Aspect %i" (start + number))
-                prop.style [ aspectButtonWidth ]
-            ]
+            addonButton text aspectButtonWidth
             Bulma.textInput [
                 prop.name (sprintf "other-aspect-%i" number)
                 prop.placeholder "New Aspect"

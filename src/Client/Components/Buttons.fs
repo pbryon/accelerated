@@ -120,3 +120,11 @@ let addonGroup (items: ReactElement list) =
                 Bulma.control [ x] )
         ]
     ]
+
+let addonButton (text: string) (width: IStyleAttribute) =
+    Bulma.button [
+        button.isPrimary
+        prop.text text
+        prop.tabIndex -1
+        prop.style [ width ]
+    ]
