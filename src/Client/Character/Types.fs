@@ -146,11 +146,27 @@ let addStartingAspects (model: Model) =
             |> addPhaseTrioAspects model
             |> addExtraAspects model }
 
+let validateAspects model =
+
+    let valid =
+        model.Aspects
+        |> List.filter (fun x ->
+            match x with
+            | Aspect.HighConcept name
+            | Aspect.Trouble name ->
+                "" <> Convert.aspectName name
+            | Aspect.PhaseTrio (_, name) ->
+                "" <> Convert.aspectName name
+            | Aspect.Other _ ->
+                true
+        )
+
+    valid.Length = model.Aspects.Length
+
 let isDone model =
     Some model
     |> validate (fun x -> x.Campaign.IsSome)
     |> validate (fun x -> "" <> Convert.playerName x.Player)
     |> validate (fun x -> "" <> Convert.characterName x.CharacterName)
-    |> validate (fun x -> x.Aspects.Length > 0)
-    |> validate (fun x -> false) // TODO: finish this logic
+    |> validate validateAspects
     |> Option.isSome

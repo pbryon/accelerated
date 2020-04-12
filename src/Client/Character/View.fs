@@ -12,6 +12,7 @@ open Domain.System
 open Character.Types
 
 let setPlayerName dispatch model =
+    let player = Convert.playerName model.Player
     colLayout [
         labelCol [ Bulma.label "Player:" ]
         {
@@ -21,15 +22,18 @@ let setPlayerName dispatch model =
                 Bulma.textInput [
                     prop.name "PlayerName"
                     prop.placeholder "Player name"
-                    prop.value (Convert.playerName model.Player)
+                    prop.value player
                     prop.onTextChange (fun value -> SetPlayerName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
+                    if player = "" then
+                        input.isDanger
                 ]
             ]
         }
     ]
 
 let setCharacterName dispatch model =
+    let character = Convert.characterName model.CharacterName
     colLayout [
         labelCol [ Bulma.label "Character:" ]
         {
@@ -39,9 +43,11 @@ let setCharacterName dispatch model =
                 Bulma.textInput [
                     prop.name "CharacterName"
                     prop.placeholder "Character name"
-                    prop.value (Convert.characterName model.CharacterName)
+                    prop.value character
                     prop.onTextChange (fun value -> SetCharacterName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
+                    if character = "" then
+                        input.isDanger
                 ]
             ]
         }
@@ -56,6 +62,7 @@ let private highConcept dispatch model =
 
     match existing with
     | Some (Aspect.HighConcept name) ->
+        let aspectName = Convert.aspectName name
         addonGroup [
             Bulma.button [
                 button.isPrimary
@@ -65,9 +72,11 @@ let private highConcept dispatch model =
             Bulma.textInput [
                 prop.name "high-concept"
                 prop.placeholder "High Concept"
-                prop.value (Convert.aspectName name)
+                prop.value aspectName
                 prop.onTextChange (newHighConcept >> UpdateAspect >> dispatch)
                 prop.style [ aspectTextWidth ]
+                if aspectName = "" then
+                    input.isDanger
             ]
         ]
     | _ ->
@@ -79,6 +88,7 @@ let private trouble dispatch model =
 
     match existing with
     | Some (Aspect.Trouble name) ->
+        let aspectName = Convert.aspectName name
         addonGroup [
             Bulma.button [
                 button.isPrimary
@@ -88,16 +98,18 @@ let private trouble dispatch model =
             Bulma.textInput [
                 prop.name "trouble"
                 prop.placeholder "Trouble"
-                prop.value (Convert.aspectName name)
+                prop.value aspectName
                 prop.onTextChange (newTrouble >> UpdateAspect >> dispatch)
                 prop.style [ aspectTextWidth ]
+                if aspectName = "" then
+                    input.isDanger
             ]
         ]
     | _ ->
         Html.none
 
 let private phaseAspect dispatch model number =
-    let (phase, name) =
+    let (phase, phaseName) =
         match number with
         | 1 -> (PhaseOne, "Phase One")
         | 2 -> (PhaseTwo, "Phase Two")
@@ -110,19 +122,22 @@ let private phaseAspect dispatch model number =
     let existing = findAspectLike model defaultAspect
 
     match existing with
-    | Some (Aspect.PhaseTrio (phase, aspectName)) ->
+    | Some (Aspect.PhaseTrio (phase, name)) ->
+        let aspectName = Convert.aspectName name
         addonGroup [
             Bulma.button [
                 button.isPrimary
-                prop.text name
+                prop.text phaseName
                 prop.style [ aspectButtonWidth ]
             ]
             Bulma.textInput [
                 prop.name (sprintf "phase-%i" number)
-                prop.placeholder name
-                prop.value (Convert.aspectName aspectName)
+                prop.placeholder phaseName
+                prop.value aspectName
                 prop.onTextChange (newPhase phase >> UpdateAspect >> dispatch)
                 prop.style [ aspectTextWidth ]
+                if aspectName = "" then
+                    input.isDanger
             ]
         ]
 
