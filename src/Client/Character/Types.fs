@@ -16,7 +16,7 @@ type Model = {
 }
 
 type Msg =
-    | ResetCharacter of Campaign
+    | ResetCharacter of Campaign option
     | SetPlayerName of string
     | SetCharacterName of string
     | AddAspect of Aspect

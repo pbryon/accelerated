@@ -21,7 +21,7 @@ let setPlayerName dispatch model =
                 Bulma.textInput [
                     prop.name "PlayerName"
                     prop.placeholder "Player name"
-                    prop.defaultValue (Convert.playerName model.Player)
+                    prop.value (Convert.playerName model.Player)
                     prop.onTextChange (fun value -> SetPlayerName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                 ]
@@ -39,7 +39,7 @@ let setCharacterName dispatch model =
                 Bulma.textInput [
                     prop.name "CharacterName"
                     prop.placeholder "Character name"
-                    prop.defaultValue (Convert.characterName model.CharacterName)
+                    prop.value (Convert.characterName model.CharacterName)
                     prop.onTextChange (fun value -> SetCharacterName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                 ]
@@ -65,7 +65,7 @@ let private highConcept dispatch model =
             Bulma.textInput [
                 prop.name "high-concept"
                 prop.placeholder "High Concept"
-                prop.defaultValue (Convert.aspectName name)
+                prop.value (Convert.aspectName name)
                 prop.onTextChange (newHighConcept >> UpdateAspect >> dispatch)
                 prop.style [ aspectTextWidth ]
             ]
@@ -88,7 +88,7 @@ let private trouble dispatch model =
             Bulma.textInput [
                 prop.name "trouble"
                 prop.placeholder "Trouble"
-                prop.defaultValue (Convert.aspectName name)
+                prop.value (Convert.aspectName name)
                 prop.onTextChange (newTrouble >> UpdateAspect >> dispatch)
                 prop.style [ aspectTextWidth ]
             ]
@@ -120,7 +120,7 @@ let private phaseAspect dispatch model number =
             Bulma.textInput [
                 prop.name (sprintf "phase-%i" number)
                 prop.placeholder name
-                prop.defaultValue (Convert.aspectName aspectName)
+                prop.value (Convert.aspectName aspectName)
                 prop.onTextChange (newPhase phase >> UpdateAspect >> dispatch)
                 prop.style [ aspectTextWidth ]
             ]
@@ -155,7 +155,7 @@ let otherAspect dispatch model number =
             Bulma.textInput [
                 prop.name (sprintf "other-aspect-%i" number)
                 prop.placeholder "New Aspect"
-                prop.defaultValue (Convert.aspectName aspectName)
+                prop.value (Convert.aspectName aspectName)
                 prop.onTextChange (newAspect number >> UpdateAspect >> dispatch)
                 prop.style [ aspectTextWidth ]
             ]
@@ -227,6 +227,7 @@ let private backAndFinishButtons dispatch model =
 
 let view dispatch model =
     [
+        resetButton "Reset" (fun _ -> ResetCharacter model.Campaign |> dispatch)
         setPlayerName dispatch model
         setCharacterName dispatch model
         chooseAspects dispatch model

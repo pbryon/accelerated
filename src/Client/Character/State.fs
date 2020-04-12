@@ -10,6 +10,7 @@ open Domain.System
 open Fable.Core
 
 let init (user: UserData) (campaign: Campaign option): Model * Cmd<Msg> =
+    JS.console.log "Init called"
     {
         Campaign = campaign
         CampaignId = user.CampaignId
@@ -24,8 +25,11 @@ let init (user: UserData) (campaign: Campaign option): Model * Cmd<Msg> =
 let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
     match msg with
     | ResetCharacter campaign ->
-        { currentModel with Campaign = Some campaign }
-        |> withoutCommands
+        let userData = {
+            UserName = currentModel.Player
+            CampaignId = currentModel.CampaignId
+        }
+        init userData campaign
 
     | SetPlayerName value ->
         { currentModel with Player = PlayerName value }
