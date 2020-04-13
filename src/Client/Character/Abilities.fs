@@ -12,7 +12,7 @@ open Character.Types
 type RankValidation = {
     Rank: int
     Used: int
-    Count: int
+    Available: int
     MinimumRank: int
     IsErrored: bool
 }
@@ -86,13 +86,21 @@ let private validateRank ranks sortedAbilities minimumRank rank : RankValidation
     {
         Used = used.Length
         Rank = rank
-        Count = count
+        Available = count
         MinimumRank = minimumRank
-        IsErrored = count = 0 || used.Length > count
+        IsErrored =
+            if rank = minimumRank
+            then false
+            else count = 0 || used.Length > count
     }
 
-let private validateRanks model : RankValidation list =
+let private validateNewRank model rank =
     let ranks = defaultRanks model
+    let sortedAbilities = sortAbilitiesByRank model
+    let minimumRank = minimumRank model
+    validateRank ranks sortedAbilities minimumRank rank
+
+let private validateRanks ranks model : RankValidation list =
     let minimumRank = minimumRank model
     let sortedAbilities = sortAbilitiesByRank model
 
@@ -155,24 +163,27 @@ module State =
         | _ ->
             item
 
-    let private validateAbility model resultOption =
+    let private validateAbility model result =
         let sameRank result ability =
             abilityRank ability = result.Rank
 
-        match resultOption with
-        | None -> []
-
-        | Some result ->
-            model.Abilities
-            |> List.filter (sameRank result)
-            |> List.map (setErrored result)
+        model.Abilities
+        |> List.filter (sameRank result)
+        |> List.map (setErrored result)
 
     let private validateAbilities model =
         let resultFor results rank =
-            results
-            |> firstBy (fun x -> x.Rank = rank)
+            let found =
+                results
+                |> firstBy (fun x -> x.Rank = rank)
+            match found with
+            | Some result ->
+                result
+            | None ->
+                validateNewRank model rank
 
-        let results = validateRanks model
+        let ranks = defaultRanks model
+        let results = validateRanks ranks model
 
         let abilities =
             allRanks model
@@ -184,7 +195,7 @@ module State =
 
         { model with Abilities = abilities }
 
-    let updateAbility model ability =
+    let onUpdateAbility model ability =
         match findUsedAbility model ability.Name with
         | None -> model
 
@@ -194,10 +205,11 @@ module State =
             |> validateAbilities
 
     let allAbilitiesAssigned model =
-        validateRanks model
+        let ranks = allRanks model
+        validateRanks ranks model
         |> List.exists (fun result ->
             result.Rank <> result.MinimumRank
-            && result.Used = result.Count
+            && result.Used = result.Available
         )
 
 module View =
@@ -213,7 +225,7 @@ module View =
     let abilityRankWidth = style.width 40
 
     let private rankButton result =
-        [1 .. result.Count]
+        [1 .. result.Available]
         |> List.map (fun currentTotal ->
             let isUsed = result.Used >= currentTotal
 
@@ -230,7 +242,8 @@ module View =
         )
 
     let private rankSummary model =
-        validateRanks model
+        let ranks = defaultRanks model
+        validateRanks ranks model
         |> List.collect rankButton
 
     let private abilitySummary model =
@@ -253,7 +266,7 @@ module View =
             ]
         ]
 
-    let private onUpdateAbility ability dispatch text =
+    let private updateAbility ability dispatch text =
         let parsedRank =
             text
             |> getLast 1
@@ -281,7 +294,7 @@ module View =
                         prop.value value
                         prop.style [ abilityRankWidth ]
                         prop.pattern (Regex "^[0-9]+$")
-                        prop.onTextChange (onUpdateAbility ability dispatch)
+                        prop.onTextChange (updateAbility ability dispatch)
                         if isErrored then
                             input.isDanger
                     ]

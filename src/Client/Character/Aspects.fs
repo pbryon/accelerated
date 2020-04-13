@@ -132,7 +132,7 @@ module State =
                 |> addPhaseTrioAspects model
                 |> addExtraAspects model }
 
-    let addAspect currentModel aspect =
+    let onAddAspect currentModel aspect =
         let existing = findAspectLike currentModel aspect
         let aspects =
             if existing.IsNone then
@@ -144,7 +144,7 @@ module State =
                 |> List.filter (fun x -> x <> existing.Value)
         { currentModel with Aspects = aspects }
 
-    let updateAspect currentModel aspect =
+    let onUpdateAspect currentModel aspect =
         let existing = findAspectLike currentModel aspect
         if existing.IsNone then
             currentModel

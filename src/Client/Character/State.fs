@@ -44,15 +44,15 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         |> withoutCommands
 
     | AddAspect aspect ->
-        addAspect currentModel aspect
+        onAddAspect currentModel aspect
         |> withoutCommands
 
     | UpdateAspect aspect ->
-        updateAspect currentModel aspect
+        onUpdateAspect currentModel aspect
         |> withoutCommands
 
     | UpdateAbility ability ->
-        updateAbility currentModel ability
+        onUpdateAbility currentModel ability
         |> withoutCommands
 
     | BackToCampaignClicked _ ->
