@@ -11,6 +11,9 @@ open App.Icons
 open Domain.System
 
 open Character.Types
+open Character.Aspects
+open Character.Abilities
+
 open Abilities.View
 open Aspects.View
 
@@ -72,7 +75,7 @@ let private backAndFinishButtons dispatch model =
                 ]
                 imgButtonRight "Done" Fa.chevronRight [
                     prop.onClick (fun _ -> FinishClicked |> dispatch)
-                    prop.disabled (not (isDone model))
+                    prop.disabled (not (Validation.isDone model))
                 ]
             ]
         }

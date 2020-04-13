@@ -157,6 +157,22 @@ module State =
                     else x)
             { currentModel with Aspects = aspects }
 
+    let allAspectsNamed model =
+        let valid =
+            model.Aspects
+            |> List.filter (fun aspect ->
+                match aspect with
+                | Aspect.HighConcept name
+                | Aspect.Trouble name ->
+                    "" <> Convert.aspectName name
+                | Aspect.PhaseTrio (_, name) ->
+                    "" <> Convert.aspectName name
+                | Aspect.Other _ ->
+                    true
+            )
+
+        valid.Length = model.Aspects.Length
+
 module View =
     open Feliz.Bulma
 

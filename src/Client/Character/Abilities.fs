@@ -102,6 +102,8 @@ let private validateRanks model : RankValidation list =
     |> List.map (validateRank ranks sortedAbilities minimumRank)
 
 module State =
+    open Global
+
     let private createAbility name =
         {
             Rank = Default
@@ -115,6 +117,7 @@ module State =
      }
 
     let addAbilities model =
+        let minimumRank = minimumRank model
         let abilities =
             match model.Campaign with
             | None -> []
@@ -123,7 +126,7 @@ module State =
                 |> List.map createAbility
             | Some (Campaign.FAE campaign) ->
                 campaign.ApproachList
-                |> List.map (createAbilityOk 0)
+                |> List.map (createAbilityOk minimumRank)
 
         { model with Abilities = abilities }
 
@@ -189,6 +192,13 @@ module State =
             model
             |> replaceAbility ability
             |> validateAbilities
+
+    let allAbilitiesAssigned model =
+        validateRanks model
+        |> List.exists (fun result ->
+            result.Rank <> result.MinimumRank
+            && result.Used = result.Count
+        )
 
 module View =
     open System.Text.RegularExpressions
