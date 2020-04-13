@@ -1,5 +1,7 @@
 module Global
 
+open System
+
 open Elmish.UrlParser
 open Domain.Campaign
 open Domain.System
@@ -37,6 +39,19 @@ let private pageParser: Parser<Page -> Page, _> =
 
 let urlParser location =
   parseHash pageParser location
+
+let parseInt input =
+    match input with
+    | "" -> Some 0
+    | otherValue ->
+        match Int32.TryParse otherValue with
+        | true, number -> Some number
+        | false, _ -> None
+
+let getLast (length: int) (input: string) =
+    if input.Length <= length
+    then input
+    else input.Substring (input.Length - length, length)
 
 let validate validation model =
     model

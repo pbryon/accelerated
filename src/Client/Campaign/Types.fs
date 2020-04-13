@@ -101,7 +101,7 @@ let aspectLike aspect other =
 
 let findAspectLike model aspect =
     model.Aspects
-    |> findLike aspectLike aspect
+    |> firstLike aspectLike aspect
 
 let isDone model =
     Some model

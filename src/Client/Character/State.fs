@@ -51,6 +51,10 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         updateAspect currentModel aspect
         |> withoutCommands
 
+    | UpdateAbility ability ->
+        updateAbility currentModel ability
+        |> withoutCommands
+
     | BackToCampaignClicked _ ->
         currentModel
         |> withoutCommands

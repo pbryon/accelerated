@@ -2,6 +2,7 @@ module Character.Aspects
 
 open Feliz
 
+open Global
 open Utils
 open Domain.Campaign
 open Domain.System
@@ -37,7 +38,7 @@ let private aspectLike fst snd =
 
 let private findAspectLike model aspect =
     model.Aspects
-    |> findLike aspectLike aspect
+    |> firstLike aspectLike aspect
 
 let private hasAspectLike model aspect =
     model.Aspects
@@ -64,7 +65,7 @@ let private aspectTotal model =
 let private extraAspectTotal model =
     let extra =
         getCampaignAspects model
-        |> findLike Campaign.Types.aspectLike (ExtraAspects 1)
+        |> firstLike Campaign.Types.aspectLike (ExtraAspects 1)
 
     match extra with
     | Some (ExtraAspects number) -> number

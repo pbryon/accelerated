@@ -30,14 +30,15 @@ type Msg =
     | SetCharacterName of string
     | AddAspect of Aspect
     | UpdateAspect of Aspect
+    | UpdateAbility of Ability
     | BackToCampaignClicked of UserData
     | FinishClicked
 
 let validateAspects model =
     let valid =
         model.Aspects
-        |> List.filter (fun x ->
-            match x with
+        |> List.filter (fun aspect ->
+            match aspect with
             | Aspect.HighConcept name
             | Aspect.Trouble name ->
                 "" <> Convert.aspectName name
