@@ -9,8 +9,8 @@ open Domain.Campaign
 open Domain.System
 
 open Character.Types
-open Character.Types.Aspects
-open Character.Types.Abilities
+open Character.Aspects.State
+open Character.Abilities.State
 
 let init (user: UserData) (campaign: Campaign option): Model * Cmd<Msg> =
     {
@@ -44,30 +44,11 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         |> withoutCommands
 
     | AddAspect aspect ->
-        let existing = findAspectLike currentModel aspect
-        let aspects =
-            if existing.IsNone then
-                [aspect]
-                |> List.append currentModel.Aspects
-            else
-                [aspect]
-                |> List.append currentModel.Aspects
-                |> List.filter (fun x -> x <> existing.Value)
-        { currentModel with Aspects = aspects }
+        addAspect currentModel aspect
         |> withoutCommands
 
     | UpdateAspect aspect ->
-        let existing = findAspectLike currentModel aspect
-        if existing.IsNone then
-            currentModel
-        else
-            let aspects =
-                currentModel.Aspects
-                |> List.map (fun x ->
-                    if x = existing.Value
-                    then aspect
-                    else x)
-            { currentModel with Aspects = aspects }
+        updateAspect currentModel aspect
         |> withoutCommands
 
     | BackToCampaignClicked _ ->
