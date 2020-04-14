@@ -139,7 +139,7 @@ module State =
         { model with Abilities = abilities }
 
     let private replaceAbility ability model =
-        let replaceWith ability item =
+        let replaceWith (ability: Ability) (item: Ability) =
             if (item.Name = ability.Name)
             then ability
             else item
@@ -195,7 +195,7 @@ module State =
 
         { model with Abilities = abilities }
 
-    let onUpdateAbility model ability =
+    let onUpdateAbility model (ability: Ability) =
         match findUsedAbility model ability.Name with
         | None -> model
 

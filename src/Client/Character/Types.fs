@@ -14,6 +14,19 @@ type Ability = {
     Name: string
 }
 
+type StuntType =
+| Free
+| Paid
+
+type Stunt = {
+    Name: string
+    Description: string
+    Ability: string option
+    Action: string option
+    Activation: StuntActivation option
+    Type: StuntType
+}
+
 type Model = {
     Campaign: Campaign option
     CampaignId: CampaignId
@@ -21,6 +34,8 @@ type Model = {
     CharacterName: CharacterName
     Aspects: Aspect list
     Abilities: Ability list
+    Stunts: Stunt list
+    Refresh: int
     Finished: bool option
 }
 

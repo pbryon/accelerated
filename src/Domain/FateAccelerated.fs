@@ -67,6 +67,7 @@ type Stunt = {
     Name: StuntName
     Description: string
     Approach: Approach option
+    Action: Action option
     Activation: StuntActivation option
 }
 
@@ -76,5 +77,6 @@ let internal createStunts count =
         Name = StuntName ""
         Description = ""
         Approach = None
+        Action = None
         Activation = None
     })

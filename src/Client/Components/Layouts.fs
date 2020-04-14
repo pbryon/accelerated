@@ -49,6 +49,14 @@ let fluidColLayout (elements: ReactElement list) =
         prop.children elements
     ]
 
+let row (padding: IReactProperty option) (elements: ReactElement list) =
+    Bulma.column [
+        column.isFull
+        if padding.IsSome then
+            padding.Value
+        prop.children elements
+    ]
+
 [<RequireQualifiedAccess>]
 module Debug =
     let private enableDebugMode = true

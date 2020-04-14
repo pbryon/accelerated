@@ -16,6 +16,7 @@ open Character.Abilities
 
 open Abilities.View
 open Aspects.View
+open Stunts.View
 
 let setPlayerName dispatch model =
     let player = Convert.playerName model.Player
@@ -85,10 +86,14 @@ let view dispatch model =
         resetButton "Reset" (fun _ -> ResetCharacter model.Campaign |> dispatch)
         setPlayerName dispatch model
         setCharacterName dispatch model
+        Html.hr []
         chooseAspects dispatch model
         addNextAspect dispatch model
+        Html.hr []
         chooseAbilities dispatch model
+        Html.hr []
+        selectStunts dispatch model
         backAndFinishButtons dispatch model
-        yield! Debug.view "Abilities" model.Abilities
+        yield! Debug.view "Stunts" model.Stunts
     ]
     |> box "Character creation"

@@ -23,6 +23,7 @@
         <Compile Include="Character/Types.fs" />
         <Compile Include="Character/Aspects.fs" />
         <Compile Include="Character/Abilities.fs" />
+        <Compile Include="Character/Stunts.fs" />
         <Compile Include="Character/Validation.fs" />
         <Compile Include="Types.fs" />
         <Compile Include="Components/Navbar.fs" />

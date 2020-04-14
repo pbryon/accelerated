@@ -11,6 +11,7 @@ open Domain.System
 open Character.Types
 open Character.Aspects.State
 open Character.Abilities.State
+open Character.Stunts.State
 
 let init (user: UserData) (campaign: Campaign option): Model * Cmd<Msg> =
     {
@@ -20,10 +21,14 @@ let init (user: UserData) (campaign: Campaign option): Model * Cmd<Msg> =
         CharacterName = CharacterName ""
         Aspects = []
         Abilities = []
+        Stunts = []
+        Refresh = 0
         Finished = None
     }
     |> addStartingAspects
     |> addAbilities
+    |> addRefresh
+    |> addStunts
     |> withoutCommands
 
 let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =

@@ -101,11 +101,18 @@ type Refresh = Refresh of int
 type StuntName = StuntName of string
 
 type StuntActivation =
+| AlwaysOn
 | FatePoints of int
 | Scene
 | Conflict
 | Day
 | Session
+
+type Action =
+| Attack
+| CreateAdvantage
+| Defend
+| Overcome
 
 [<RequireQualifiedAccess>]
 module Convert =
