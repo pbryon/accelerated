@@ -199,6 +199,8 @@ module View =
                     then "Free Stunt name"
                     else "Stunt name"
                 )
+                if stunt.Name = "" then
+                    input.isDanger
                 prop.defaultValue stunt.Name
                 prop.style [ stuntNameWidth ]
             ]
@@ -213,6 +215,8 @@ module View =
                 prop.defaultValue ""
                 prop.children activation
                 prop.style [ dropdownWidth ]
+                if stunt.Activation.IsNone then
+                    input.isDanger
             ]
         ]
 
@@ -226,6 +230,8 @@ module View =
                 prop.defaultValue ""
                 prop.children abilities
                 prop.style [ dropdownWidth ]
+                if stunt.Ability.IsNone then
+                    input.isDanger
             ]
         ]
 
@@ -238,6 +244,8 @@ module View =
                 prop.defaultValue ""
                 prop.children actions
                 prop.style [ dropdownWidth ]
+                if stunt.Action.IsNone then
+                    input.isDanger
             ]
         ]
 
@@ -247,6 +255,8 @@ module View =
             prop.placeholder "Stunt description"
             prop.defaultValue ""
             prop.style [ style.minHeight 100; gapBetweenStunts ]
+            if stunt.Description = "" then
+                input.isDanger
         ]
 
     let private editStunt dispatch model stunt =
