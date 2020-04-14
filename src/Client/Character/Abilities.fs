@@ -250,30 +250,23 @@ module View =
             ]
         )
 
-    let private rankSummary model =
-        let ranks = defaultRanks model
-        validateRanks ranks model
-        |> List.collect rankButton
-
     let private abilitySummary model =
-        let buttons = rankSummary model
-        Bulma.field [
-            field.isHorizontal
-            prop.children [
-                Bulma.fieldLabel [
-                    Bulma.label [
-                        prop.text "Available ranks:"
-                        prop.style [
-                            style.fontWeight.normal
-                            style.display.inlineElement
-                        ]
-                    ]
-                ]
-                Bulma.fieldBody [
-                    addonGroup buttons
-                ]
+        let ranks = defaultRanks model
+
+        let ranks =
+            validateRanks ranks model
+            |> List.collect rankButton
+        let description =
+            Bulma.button [
+                prop.tabIndex -1
+                button.isWhite
+                prop.style [ style.textAlign.left ]
+                prop.text "Available ranks"
             ]
-        ]
+
+        ranks
+        |> List.append [ description ]
+        |> addonGroup
 
     let private updateAbility ability dispatch text =
         let parsedRank =
