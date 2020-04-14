@@ -238,7 +238,8 @@ module View =
             | _ -> failwithf "Unsupported phase number: %i" number
 
         let newPhase phase text =
-            Aspect.PhaseTrio (phase, AspectName "")
+            Aspect.PhaseTrio (phase, AspectName text)
+
         let defaultAspect = newPhase phase ""
         let existing = findAspectLike model defaultAspect
 
