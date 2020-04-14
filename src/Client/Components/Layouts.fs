@@ -53,10 +53,10 @@ let fluidColLayout (elements: ReactElement list) =
 module Debug =
     let private enableDebugMode = true
 
-    let view model =
+    let view (title: string) model =
         if enableDebugMode
         then [
-                Html.h3 "Model"
+                Html.h3 title
                 Html.div (sprintf "%A" model)
             ]
         else []

@@ -89,6 +89,6 @@ let view dispatch model =
         addNextAspect dispatch model
         chooseAbilities dispatch model
         backAndFinishButtons dispatch model
-        yield! Debug.view model
+        yield! Debug.view "Abilities" model.Abilities
     ]
     |> box "Character creation"

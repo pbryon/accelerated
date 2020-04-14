@@ -5,9 +5,13 @@ open Feliz
 open Utils
 
 open Domain
+open Domain.System
 open Domain.Campaign
 
 open Character.Types
+open App.Icons
+open Browser.Types
+open Fable.Core
 
 type RankValidation = {
     Rank: int
@@ -22,6 +26,11 @@ let private abilityNamePlural model =
     | None -> ""
     | Some (Campaign.Core _) -> "Skills"
     | Some (Campaign.FAE _) -> "Approaches"
+
+let private usesSkills model =
+    match model.Campaign with
+    | Some (Campaign.Core _) -> true
+    | _ -> false
 
 let private findUsedAbility model (name: string) =
     model.Abilities
@@ -44,9 +53,9 @@ let minimumRank model =
     match model.Campaign with
     | None -> 0
     | Some (Campaign.Core campaign) ->
-        System.rankValue campaign.SkillLevel
+        rankValue campaign.SkillLevel
     | Some (Campaign.FAE campaign) ->
-        System.rankValue campaign.ApproachLevel
+        rankValue campaign.ApproachLevel
 
 let private defaultRanks model =
     match model.Campaign with
@@ -110,29 +119,22 @@ let private validateRanks ranks model : RankValidation list =
     |> List.map (validateRank ranks sortedAbilities minimumRank)
 
 module State =
-    let private createAbility name =
+    let private createAbility model name  =
         {
-            Rank = Default
+            Rank = Ok (minimumRank model)
             Name = name
         }
 
-    let private createAbilityOk rank name =
-     {
-         Rank = Ok rank
-         Name = name
-     }
-
     let addAbilities model =
-        let minimumRank = minimumRank model
         let abilities =
             match model.Campaign with
             | None -> []
             | Some (Campaign.Core campaign) ->
                 campaign.SkillList
-                |> List.map createAbility
+                |> List.map (createAbility model)
             | Some (Campaign.FAE campaign) ->
                 campaign.ApproachList
-                |> List.map (createAbilityOk minimumRank)
+                |> List.map (createAbility model)
 
         { model with Abilities = abilities }
 
@@ -287,12 +289,17 @@ module View =
             }
             |> dispatch
 
-    let private approachInputs dispatch model ability =
+    let private abilityInputs dispatch model ability =
         let value = string (abilityRank ability)
         let isErrored = isAbilityErrored model ability
 
+        let columnWidth =
+            if usesSkills model
+            then column.isOneThird
+            else column.isHalf
+
         Bulma.column [
-            column.isHalf
+            columnWidth
             prop.children [
                 addonGroup [
                     addonButton ability.Name abilityNameWidth
@@ -310,47 +317,39 @@ module View =
             ]
         ]
 
-    let private selectApproachRanks dispatch model =
-        let fields =
+    let abilityFields dispatch model =
+        match model.Campaign with
+        | None ->
+            []
+        | Some (Campaign.Core _) ->
             model.Abilities
-            |> List.map (approachInputs dispatch model)
-
-        [
-            colLayout [
-                {
-                    Size = [ column.is8 ]
-                    Content = [
-                        Bulma.columns [
-                            columns.isMultiline
-                            prop.children fields
-                        ]
-                    ]
-                }
-            ]
-        ]
+            |> List.map (abilityInputs dispatch model)
+        | Some (Campaign.FAE _) ->
+            model.Abilities
+            |> List.map (abilityInputs dispatch model)
 
     let chooseAbilities dispatch model =
         let abilityName = abilityNamePlural model
 
-        let setAbilityRanks =
-            match model.Campaign with
-            | None
-            | Some (Campaign.Core _) ->
-                []
-            | Some (Campaign.FAE _) ->
-                selectApproachRanks dispatch model
+        let fields = abilityFields dispatch model
 
-        if setAbilityRanks.Length = 0
-        then
-            Html.none
-        else
-            colLayout [
-                labelCol [ Bulma.label (abilityName + ":") ]
-                {
-                    Size = [ column.is8 ]
-                    Content = [
-                        abilitySummary model
-                        yield! setAbilityRanks
+        let columnWidth =
+            if usesSkills model
+            then column.is8
+            else column.is5
+
+        if fields.Length = 0
+        then Html.none
+        else colLayout [
+            labelCol [ Bulma.label (abilityName + ":") ]
+            {
+                Size = [ columnWidth ]
+                Content = [
+                    abilitySummary model
+                    Bulma.columns [
+                        columns.isMultiline
+                        prop.children fields
                     ]
-                }
-            ]
+                ]
+            }
+        ]

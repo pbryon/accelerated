@@ -265,6 +265,6 @@ let view dispatch model =
             selectMaxStunts dispatch model
             finishButton dispatch model
         ]
-        yield! Debug.view model
+        yield! Debug.view "Model" model
    ]
    |> box ("Campaign creation")

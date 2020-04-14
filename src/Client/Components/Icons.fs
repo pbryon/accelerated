@@ -11,4 +11,5 @@ type Fa =
     static member inline chevronUp = "fas fa-chevron-up"
     static member inline github = "fab fa-github"
     static member inline plus = "fas fa-plus"
+    static member inline times = "fas fa-times"
     static member inline trash = "fas fa-trash-alt"
