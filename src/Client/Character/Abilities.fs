@@ -319,7 +319,6 @@ module View =
             colLayout [
                 {
                     Size = [ column.is8 ]
-                    Align = style.textAlign.left
                     Content = [
                         Bulma.columns [
                             columns.isMultiline
@@ -349,7 +348,6 @@ module View =
                 labelCol [ Bulma.label (abilityName + ":") ]
                 {
                     Size = [ column.is8 ]
-                    Align = style.textAlign.left
                     Content = [
                         abilitySummary model
                         yield! setAbilityRanks

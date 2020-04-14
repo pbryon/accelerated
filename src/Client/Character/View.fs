@@ -23,7 +23,6 @@ let setPlayerName dispatch model =
         labelCol [ Bulma.label "Player:" ]
         {
             Size = [ column.is4 ]
-            Align = style.textAlign.left
             Content = [
                 Bulma.textInput [
                     prop.name "PlayerName"
@@ -45,7 +44,6 @@ let setCharacterName dispatch model =
         labelCol [ Bulma.label "Character:" ]
         {
             Size = [ column.is4 ]
-            Align = style.textAlign.left
             Content = [
                 Bulma.textInput [
                     prop.name "CharacterName"
@@ -70,7 +68,6 @@ let private backAndFinishButtons dispatch model =
         labelCol [ Html.none ]
         {
             Size = [ column.is4 ]
-            Align = style.textAlign.left
             Content = [
                 imgButton "Back" Fa.chevronLeft [
                     prop.onClick (fun _ -> BackToCampaignClicked userData |> dispatch )

@@ -306,7 +306,6 @@ module View =
             labelCol [ Bulma.label "Aspects:" ]
             {
                 Size = [ column.is8 ]
-                Align = style.textAlign.left
                 Content = [
                     highConcept dispatch model
                     trouble dispatch model
@@ -324,7 +323,6 @@ module View =
                 emptyLabelCol
                 {
                     Size = [ column.is4 ]
-                    Align = style.textAlign.left
                     Content = [
                         imgButton "" Fa.plus [
                             prop.onClick (fun _ -> AddAspect aspect |> dispatch)

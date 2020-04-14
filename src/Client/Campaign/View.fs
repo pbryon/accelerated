@@ -19,7 +19,6 @@ let private selectCampaignType dispatch model =
         labelCol [ Bulma.label "Campaign type:" ]
         {
             Size = [ column.is4 ]
-            Align = style.textAlign.left
             Content =
                 buttonGroup [
                     {
@@ -72,7 +71,6 @@ let private toggleCustomAbilities dispatch model =
         labelCol [ Bulma.label text ]
         {
             Size = [ column.is4 ]
-            Align = style.textAlign.left
             Content =
                 buttonGroup [
                     {
@@ -116,7 +114,6 @@ let private customiseAbilities dispatch model =
             labelCol []
             {
                 Size = [ column.is8 ]
-                Align = style.textAlign.left
                 Content = [ fluidColLayout elements ]
             }
         ]
@@ -136,7 +133,6 @@ let private selectAspectCount dispatch model =
         labelCol [ Bulma.label "Aspects:"]
         {
             Size = [ column.is8 ]
-            Align = style.textAlign.left
             Content = buttonGroup [
                 {
                     Text = "High Concept"
@@ -177,7 +173,6 @@ let private adjustRefresh dispatch model =
         labelCol [ Bulma.label "Refresh:" ]
         {
             Size = [ column.is6]
-            Align = style.textAlign.left
             Content = buttonGroup buttons
         }
     ]
@@ -197,7 +192,6 @@ let private selectFreeStunts dispatch model =
         labelCol [ Bulma.label "Free stunts:"]
         {
             Size = [ column.is6 ]
-            Align = style.textAlign.left
             Content = buttonGroup buttons
         }
     ]
@@ -239,7 +233,6 @@ let private selectMaxStunts dispatch model =
                 labelCol [ Bulma.label "Maximum stunts:"]
                 {
                     Size = [ column.is8 ]
-                    Align = style.textAlign.left
                     Content = buttonGroup buttons
                 }
             ]
@@ -249,7 +242,6 @@ let finishButton dispatch model =
         labelCol [ Html.none ]
         {
             Size = [ column.is4 ]
-            Align = style.textAlign.left
             Content = [
                 imgButtonRight "Create character" Fa.chevronRight [
                     prop.onClick (fun _ -> FinishClicked |> dispatch)
