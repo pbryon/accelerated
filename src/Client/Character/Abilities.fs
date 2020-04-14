@@ -203,13 +203,19 @@ module State =
             |> validateAbilities
 
     let allAbilitiesAssigned model =
-        // FIXME: check unavailable ranks, too
         let ranks = allRanks model
         validateRanks ranks model
         |> List.exists (fun result ->
             result.Rank <> result.MinimumRank
             && result.Used = result.Available
         )
+
+    let allAbilitiesValid model =
+        let validated = validateAbilities model
+
+        validated.Abilities
+        |> List.exists (isAbilityErrored validated)
+        |> not
 
 module View =
     open System.Text.RegularExpressions
