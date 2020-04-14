@@ -178,7 +178,7 @@ module View =
 
     open App.Icons
     open App.Views.Layouts
-    open App.Views.Buttons
+    open App.Views.Controls
 
     let private aspectButtonWidth = style.width 150
     let private aspectTextWidth = style.width 300
@@ -196,6 +196,7 @@ module View =
                     prop.name "high-concept"
                     prop.placeholder "High Concept"
                     prop.value aspectName
+                    onFocusSelectText
                     prop.onTextChange (newHighConcept >> UpdateAspect >> dispatch)
                     prop.style [ aspectTextWidth ]
                     if aspectName = "" then
@@ -218,6 +219,7 @@ module View =
                     prop.name "trouble"
                     prop.placeholder "Trouble"
                     prop.value aspectName
+                    onFocusSelectText
                     prop.onTextChange (newTrouble >> UpdateAspect >> dispatch)
                     prop.style [ aspectTextWidth ]
                     if aspectName = "" then
@@ -249,6 +251,7 @@ module View =
                     prop.name (sprintf "phase-%i" number)
                     prop.placeholder phaseName
                     prop.value aspectName
+                    onFocusSelectText
                     prop.onTextChange (newPhase phase >> UpdateAspect >> dispatch)
                     prop.style [ aspectTextWidth ]
                     if aspectName = "" then

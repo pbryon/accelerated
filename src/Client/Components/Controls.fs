@@ -1,10 +1,11 @@
-module App.Views.Buttons
+module App.Views.Controls
 
 open Feliz
 open Feliz.Bulma
 open Browser.Types
 
 open App.Icons
+open Browser.Types
 
 type ButtonState = {
     Text: string
@@ -128,3 +129,9 @@ let addonButton (text: string) (width: IStyleAttribute) =
         prop.tabIndex -1
         prop.style [ width ]
     ]
+
+let onFocusSelectText =
+    prop.onFocus (fun e ->
+        let target = e.target :?> HTMLInputElement
+        target.select()
+    )

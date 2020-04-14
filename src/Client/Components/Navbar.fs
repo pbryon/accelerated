@@ -6,7 +6,7 @@ open Feliz.Bulma
 open Global
 open App.Icons
 open App.Types
-open App.Views.Buttons
+open App.Views.Controls
 
 let private isMenuItemActive page currentPage =
     match currentPage with

@@ -17,7 +17,7 @@
         <Compile Include="Utils.fs" />
         <Compile Include="ElmishHelper.fs" />
         <Compile Include="Components/Icons.fs" />
-        <Compile Include="Components/Buttons.fs" />
+        <Compile Include="Components/Controls.fs" />
         <Compile Include="Components/Layouts.fs" />
         <Compile Include="Campaign/Types.fs" />
         <Compile Include="Character/Types.fs" />

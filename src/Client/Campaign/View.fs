@@ -6,7 +6,7 @@ open Browser.Types
 
 open Global
 open App.Icons
-open App.Views.Buttons
+open App.Views.Controls
 open App.Views.Layouts
 
 open Domain.Campaign

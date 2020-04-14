@@ -5,7 +5,7 @@ open Feliz.Bulma
 
 open Global
 open App.Views.Layouts
-open App.Views.Buttons
+open App.Views.Controls
 open App.Icons
 
 open Domain.System
@@ -29,6 +29,7 @@ let setPlayerName dispatch model =
                     prop.name "PlayerName"
                     prop.placeholder "Player name"
                     prop.value player
+                    onFocusSelectText
                     prop.onTextChange (fun value -> SetPlayerName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                     if player = "" then
@@ -50,6 +51,7 @@ let setCharacterName dispatch model =
                     prop.name "CharacterName"
                     prop.placeholder "Character name"
                     prop.value character
+                    onFocusSelectText
                     prop.onTextChange (fun value -> SetCharacterName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                     if character = "" then

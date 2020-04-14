@@ -110,8 +110,6 @@ let private validateRanks ranks model : RankValidation list =
     |> List.map (validateRank ranks sortedAbilities minimumRank)
 
 module State =
-    open Global
-
     let private createAbility name =
         {
             Rank = Default
@@ -205,6 +203,7 @@ module State =
             |> validateAbilities
 
     let allAbilitiesAssigned model =
+        // FIXME: check unavailable ranks, too
         let ranks = allRanks model
         validateRanks ranks model
         |> List.exists (fun result ->
@@ -219,7 +218,7 @@ module View =
 
     open Global
     open App.Views.Layouts
-    open App.Views.Buttons
+    open App.Views.Controls
 
     let abilityNameWidth = style.width 150
     let abilityRankWidth = style.width 40
@@ -229,16 +228,18 @@ module View =
         |> List.map (fun currentTotal ->
             let isUsed = result.Used >= currentTotal
 
-            {
-                Text = string result.Rank
-                Active = not isUsed
-                Color =
-                    if result.IsErrored then
-                        button.isDanger
-                    else
-                        button.isPrimary
-                OnClick = (fun _ -> ())
-            }
+            Bulma.button [
+                prop.text (string result.Rank)
+                prop.tabIndex -1
+
+                if result.IsErrored
+                then button.isDanger
+                else button.isPrimary
+
+                if isUsed
+                then button.isLight
+                else button.isActive
+            ]
         )
 
     let private rankSummary model =
@@ -261,7 +262,7 @@ module View =
                     ]
                 ]
                 Bulma.fieldBody [
-                    yield! buttonGroup buttons
+                    addonGroup buttons
                 ]
             ]
         ]
@@ -294,6 +295,7 @@ module View =
                         prop.value value
                         prop.style [ abilityRankWidth ]
                         prop.pattern (Regex "^[0-9]+$")
+                        onFocusSelectText
                         prop.onTextChange (updateAbility ability dispatch)
                         if isErrored then
                             input.isDanger
