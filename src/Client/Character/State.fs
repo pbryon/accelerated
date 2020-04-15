@@ -60,8 +60,16 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         onUpdateAbility currentModel ability
         |> withoutCommands
 
+    | BuyStunt ->
+        onBuyStunt currentModel
+        |> withoutCommands
+
     | UpdateStunt stunt ->
         onUpdateStunt currentModel stunt
+        |> withoutCommands
+
+    | RemoveStunt index ->
+        onRemoveStunt currentModel index
         |> withoutCommands
 
     | BackToCampaignClicked _ ->

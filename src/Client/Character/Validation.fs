@@ -16,5 +16,6 @@ let isDone model =
     |> validate allAspectsNamed
     |> validate allAbilitiesAssigned
     |> validate allAbilitiesValid
+    |> validate stuntCountWithinRange
     |> validate allStuntsValid
     |> Option.isSome

@@ -95,5 +95,6 @@ let view dispatch model =
         selectStunts dispatch model
         backAndFinishButtons dispatch model
         yield! Debug.view "Stunts" model.Stunts
+        yield! Debug.view "Model" model
     ]
     |> box "Character creation"

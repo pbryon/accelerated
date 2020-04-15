@@ -47,6 +47,8 @@ type Msg =
     | AddAspect of Aspect
     | UpdateAspect of Aspect
     | UpdateAbility of Ability
+    | BuyStunt
     | UpdateStunt of Stunt
+    | RemoveStunt of int
     | BackToCampaignClicked of UserData
     | FinishClicked

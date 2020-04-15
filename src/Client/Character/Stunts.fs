@@ -9,9 +9,18 @@ open Domain.System
 open Domain.Campaign
 
 open Character.Types
+open App.Icons
 open Fable.Core
 
 let private refreshValue (Refresh refresh) = refresh
+
+let private initialRefresh model =
+    match model.Campaign with
+    | None -> 0
+    | Some (Campaign.Core campaign) ->
+        refreshValue campaign.Refresh
+    | Some (Campaign.FAE campaign) ->
+        refreshValue campaign.Refresh
 
 let private abilityName model =
     match model.Campaign with
@@ -105,26 +114,25 @@ let private freeStunts model =
         campaign.FreeStunts
 
 let private maxStunts model =
+    let defaultMax = initialRefresh model + freeStunts model
+
     match model.Campaign with
     | None ->
         0
     | Some (Campaign.Core campaign) ->
-        defaultArg campaign.MaxStunts (refreshValue campaign.Refresh)
+        defaultArg campaign.MaxStunts defaultMax
     | Some (Campaign.FAE campaign) ->
-        defaultArg campaign.MaxStunts (refreshValue campaign.Refresh)
+        defaultArg campaign.MaxStunts defaultMax
+
+let private canAddNewStunt model =
+    let maximum = maxStunts model
+    let currentTotal = model.Stunts.Length
+
+    currentTotal < maximum
 
 module State =
-    let addRefresh model  =
-        let refresh =
-            match model.Campaign with
-            | None ->
-                0
-            | Some (Campaign.Core campaign) ->
-                refreshValue campaign.Refresh
-            | Some (Campaign.FAE campaign) ->
-                refreshValue campaign.Refresh
-
-        { model with Refresh = refresh }
+    let addRefresh (model: Model)  =
+        { model with Refresh = initialRefresh model }
 
     let addStunts model =
         let free = freeStunts model
@@ -136,6 +144,18 @@ module State =
                 Stunts =
                     [1 .. free]
                     |> List.map (fun index -> createStunt Free index) }
+
+    let onBuyStunt model =
+        let lastIndex =
+            if model.Stunts.Length = 0
+            then 0
+            else (model.Stunts |> List.last).Index
+
+        let stunt = createStunt Paid (lastIndex + 1)
+        { model with
+            Stunts = [ stunt ] |> List.append model.Stunts
+            Refresh = model.Refresh - 1
+        }
 
     let private replaceStunt stunt model =
         let replaceWith stunt item =
@@ -157,6 +177,31 @@ module State =
             model
             |> replaceStunt stunt
 
+    let onRemoveStunt model index =
+        let existing = findStunt model index
+        match existing with
+        | None ->
+            model
+        | Some stunt ->
+            match stunt.Type with
+            | Free ->
+                model
+            | Paid ->
+                let stunts =
+                    model.Stunts
+                    |> List.filter (fun stunt -> stunt.Index <> index)
+
+                { model with
+                    Stunts = stunts
+                    Refresh = model.Refresh + 1 }
+
+    let stuntCountWithinRange model =
+        let total = model.Stunts.Length
+        let max = maxStunts model
+        let min = freeStunts model
+
+        min <= total && total <= max
+
     let allStuntsValid model =
         model.Stunts
         |> noneExist (fun stunt ->
@@ -177,7 +222,7 @@ module View =
     let private addonButtonWidth = style.width 150
     let private stuntNameWidth = style.width 300
     let private dropdownWidth = style.width 200
-    let private gapBetweenStunts = style.marginBottom 20
+    let private gapBetweenStunts = style.marginBottom 30
 
     let private toOptions (list: (string * string) list) =
         list
@@ -223,14 +268,14 @@ module View =
 
     let private currentRefresh model =
         Html.div [
-            prop.style [ style.marginBottom 30 ]
+            prop.style [ gapBetweenStunts ]
             prop.children [
                 addonGroup [
                     addonButton "Refresh" addonButtonWidth
                     Bulma.button [
                         if model.Refresh > 0
                         then button.isPrimary
-                        else button.isDanger
+                        else button.isWarning
 
                         button.isLight
                         prop.tabIndex -1
@@ -263,13 +308,23 @@ module View =
             ]
         ]
 
+    let private removeStunt (padding: IReactProperty option) dispatch stunt =
+        if stunt.Type = Free
+        then Html.none
+        else row padding [
+            imgButton "Remove stunt" Fa.times [
+                button.isDanger
+                prop.onClick (fun _ -> RemoveStunt stunt.Index |> dispatch)
+            ]
+        ]
+
     let private updateStuntActivation dispatch (stunt: Stunt) name =
         let activation = parseActivation name
         { stunt with Activation = activation }
         |> UpdateStunt
         |> dispatch
 
-    let stuntActivation dispatch model stunt =
+    let private stuntActivation dispatch model stunt =
         let activation = activationOptions
         let selectedItem = string stunt.Activation
 
@@ -332,12 +387,12 @@ module View =
         |> dispatch
 
 
-    let stuntDescription dispatch model stunt =
+    let private stuntDescription dispatch model stunt =
         Bulma.textarea [
             onFocusSelectText
             prop.placeholder "Stunt description"
             prop.value stunt.Description
-            prop.style [ style.minHeight 100; gapBetweenStunts ]
+            prop.style [ style.minHeight 100 ]
             if stunt.Description = "" then
                 input.isDanger
             prop.onTextChange (updateStuntDescription dispatch stunt)
@@ -347,7 +402,9 @@ module View =
         let tight = Some (prop.style [ style.paddingBottom (length.rem 0.25) ])
         Bulma.columns [
             columns.isMultiline
+            prop.style [ gapBetweenStunts ]
             prop.children [
+                removeStunt tight dispatch stunt
                 row tight [ stuntName dispatch model stunt ]
                 row tight [ stuntAbility dispatch model stunt ]
                 row tight [ stuntAction dispatch model stunt ]
@@ -355,6 +412,14 @@ module View =
                 row tight [ stuntDescription dispatch model stunt ]
             ]
         ]
+
+    let private addNewStunt dispatch model =
+        if canAddNewStunt model
+        then imgButton "Buy stunt with Refresh" Fa.plus [
+                prop.onClick (fun _ -> BuyStunt |> dispatch)
+                button.isInfo
+            ]
+        else Html.none
 
     let selectStunts dispatch model =
         let rows =
@@ -368,6 +433,7 @@ module View =
                 Content = [
                     currentRefresh model
                     yield! rows
+                    addNewStunt dispatch model
                 ]
             }
         ]
