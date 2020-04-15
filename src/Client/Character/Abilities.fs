@@ -252,6 +252,7 @@ module View =
 
     let private abilitySummary model =
         let ranks = defaultRanks model
+        let allAssigned = State.allAbilitiesAssigned model
 
         let ranks =
             validateRanks ranks model
@@ -262,6 +263,11 @@ module View =
                 button.isWhite
                 prop.style [ style.textAlign.left ]
                 prop.text "Available ranks"
+                if not allAssigned then
+                    yield! [
+                        button.isDanger
+                        prop.title "Please assign all abilities"
+                    ]
             ]
 
         ranks
