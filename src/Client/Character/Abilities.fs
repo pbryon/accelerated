@@ -216,8 +216,7 @@ module State =
         let validated = validateAbilities model
 
         validated.Abilities
-        |> List.exists (isAbilityErrored validated)
-        |> not
+        |> noneExist (isAbilityErrored validated)
 
 module View =
     open System.Text.RegularExpressions

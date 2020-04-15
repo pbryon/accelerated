@@ -21,10 +21,11 @@ type StuntType =
 type Stunt = {
     Name: string
     Description: string
-    Ability: string option
-    Action: string option
+    Ability: string
+    Action: Action option
     Activation: StuntActivation option
     Type: StuntType
+    Index: int
 }
 
 type Model = {
@@ -46,5 +47,6 @@ type Msg =
     | AddAspect of Aspect
     | UpdateAspect of Aspect
     | UpdateAbility of Ability
+    | UpdateStunt of Stunt
     | BackToCampaignClicked of UserData
     | FinishClicked

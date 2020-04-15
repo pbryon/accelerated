@@ -135,3 +135,9 @@ let onFocusSelectText =
         let target = e.target :?> HTMLInputElement
         target.select()
     )
+
+let onSelectChange handler =
+    prop.onChange (fun (e: Event) ->
+        let target = e.target :?> HTMLInputElement
+        handler target.value
+    )

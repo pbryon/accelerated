@@ -60,6 +60,10 @@ let update (msg: Msg) (currentModel: Model) : Model * Cmd<Msg> =
         onUpdateAbility currentModel ability
         |> withoutCommands
 
+    | UpdateStunt stunt ->
+        onUpdateStunt currentModel stunt
+        |> withoutCommands
+
     | BackToCampaignClicked _ ->
         currentModel
         |> withoutCommands

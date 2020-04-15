@@ -1,13 +1,12 @@
 module Character.Validation
 
-open Global
+open Utils
 open Domain.System
 
 open Character.Types
-open Character.Aspects
-open Character.Abilities
 open Aspects.State
 open Abilities.State
+open Stunts.State
 
 let isDone model =
     Some model
@@ -17,4 +16,5 @@ let isDone model =
     |> validate allAspectsNamed
     |> validate allAbilitiesAssigned
     |> validate allAbilitiesValid
+    |> validate allStuntsValid
     |> Option.isSome

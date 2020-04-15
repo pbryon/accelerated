@@ -9,6 +9,7 @@ open Domain.System
 open Domain.Campaign
 
 open Character.Types
+open Fable.Core
 
 let private refreshValue (Refresh refresh) = refresh
 
@@ -33,7 +34,9 @@ let private abilitiesWithRanks model =
     model.Abilities
     |> List.sortWith compareAblityRank
     |> List.map (fun ability ->
-        sprintf "%s +%i" ability.Name (abilityRank ability)
+        let text = sprintf "%s +%i" ability.Name (abilityRank ability)
+        let value = ability.Name
+        (value, text)
     )
 
 let private describeAction action =
@@ -41,24 +44,55 @@ let private describeAction action =
     | CreateAdvantage -> "Create advantage"
     | _ -> string action
 
-let private describeActivation activation =
-    match activation with
-    | FatePoints _ -> "Fate point"
-    | AlwaysOn -> "Passive"
-    | value -> sprintf "Once / %s" (string value)
+let private describeActivation activationOption =
+    match activationOption with
+    | None
+        -> ""
 
-let private findStunt model name =
+    | Some activation ->
+        match activation with
+        | FatePoints _ -> "Fate point"
+        | AlwaysOn -> "Passive"
+        | value -> sprintf "Once / %s" (string value)
+
+let private parseActivation name =
+    match name with
+    | "AlwaysOn" ->
+        Some AlwaysOn
+    | fate when fate.StartsWith "FatePoints" ->
+        Some (FatePoints 1)
+    | "Scene" ->
+        Some Scene
+    | "Conflict" ->
+        Some Conflict
+    | "Day" ->
+        Some Day
+    | "Session" ->
+        Some Session
+    | _ ->
+        None
+
+let private parseAction name =
+    match name with
+    | "Attack" -> Some Attack
+    | "CreateAdvantage" -> Some CreateAdvantage
+    | "Defend" -> Some Defend
+    | "Overcome" -> Some Overcome
+    | _ -> None
+
+let private findStunt model index =
     model.Stunts
-    |> firstBy (fun x -> x.Name = name)
+    |> firstBy (fun x -> x.Index = index)
 
-let private createStunt stuntType =
+let private createStunt stuntType index =
     {
         Name = ""
         Description = ""
-        Ability = None
+        Ability = ""
         Action = None
         Activation = None
         Type = stuntType
+        Index = index
     }
 
 let private freeStunts model =
@@ -101,27 +135,37 @@ module State =
             { model with
                 Stunts =
                     [1 .. free]
-                    |> List.map (fun _ -> createStunt Free) }
+                    |> List.map (fun index -> createStunt Free index) }
 
     let private replaceStunt stunt model =
         let replaceWith stunt item =
-            if (item.Name = stunt.Name)
+            if (item.Index = stunt.Index)
             then stunt
             else item
 
         { model with
             Stunts =
                 model.Stunts
-                |> List.map (replaceWith stunt)
-        }
+                |> List.map (replaceWith stunt) }
 
     let onUpdateStunt model stunt =
-        match findStunt model stunt.Name with
-        | None -> model
-
+        let existing = findStunt model stunt.Index
+        match existing with
+        | None ->
+            model
         | Some _ ->
             model
             |> replaceStunt stunt
+
+    let allStuntsValid model =
+        model.Stunts
+        |> noneExist (fun stunt ->
+            stunt.Name = ""
+            || stunt.Description = ""
+            || stunt.Ability = ""
+            || stunt.Action.IsNone
+            || stunt.Activation.IsNone
+        )
 
 module View =
     open Feliz.Bulma
@@ -135,13 +179,13 @@ module View =
     let private dropdownWidth = style.width 200
     let private gapBetweenStunts = style.marginBottom 20
 
-    let private toOptions (list: string list) =
+    let private toOptions (list: (string * string) list) =
         list
-        |> List.append [ "" ]
-        |> List.map (fun item ->
+        |> List.append [ ("", "") ]
+        |> List.map (fun (value, text) ->
             Html.option [
-                prop.text item
-                prop.value item
+                prop.text text
+                prop.value value
             ])
 
     let private abilityOptions model =
@@ -155,22 +199,29 @@ module View =
             Defend
             Overcome
         ]
-        |> List.map describeAction
+        |> List.map (fun action ->
+            let text = describeAction action
+            let value = string action
+            (value, text))
         |> toOptions
 
     let private activationOptions =
         [
-            AlwaysOn
-            FatePoints 1
-            Scene
-            Conflict
-            Day
-            Session
+            Some AlwaysOn
+            Some (FatePoints 1)
+            Some Scene
+            Some Conflict
+            Some Day
+            Some Session
         ]
-        |> List.map describeActivation
+        |> List.map (fun activation ->
+            let text = describeActivation activation
+            let value = string activation
+            (value, text)
+        )
         |> toOptions
 
-    let currentRefresh model =
+    let private currentRefresh model =
         Html.div [
             prop.style [ style.marginBottom 30 ]
             prop.children [
@@ -189,7 +240,12 @@ module View =
             ]
         ]
 
-    let stuntName dispatch model stunt =
+    let private updateStuntName dispatch (stunt: Stunt) name =
+        { stunt with Name = name }
+        |> UpdateStunt
+        |> dispatch
+
+    let private stuntName dispatch model stunt =
         addonGroup [
             addonButton "Name" addonButtonWidth
             Bulma.textInput [
@@ -201,24 +257,38 @@ module View =
                 )
                 if stunt.Name = "" then
                     input.isDanger
-                prop.defaultValue stunt.Name
+                prop.value stunt.Name
                 prop.style [ stuntNameWidth ]
+                prop.onTextChange (updateStuntName dispatch stunt)
             ]
         ]
 
+    let private updateStuntActivation dispatch (stunt: Stunt) name =
+        let activation = parseActivation name
+        { stunt with Activation = activation }
+        |> UpdateStunt
+        |> dispatch
+
     let stuntActivation dispatch model stunt =
         let activation = activationOptions
+        let selectedItem = string stunt.Activation
 
         addonGroup [
             addonButton "Activation" addonButtonWidth
             Bulma.select [
-                prop.defaultValue ""
+                prop.value selectedItem
                 prop.children activation
                 prop.style [ dropdownWidth ]
                 if stunt.Activation.IsNone then
                     input.isDanger
+                onSelectChange (updateStuntActivation dispatch stunt)
             ]
         ]
+
+    let private updateStuntAbility dispatch stunt name =
+        { stunt with Ability = name }
+        |> UpdateStunt
+        |> dispatch
 
     let private stuntAbility dispatch model stunt =
        let ability = abilityName model
@@ -227,13 +297,19 @@ module View =
        addonGroup [
             addonButton ability addonButtonWidth
             Bulma.select [
-                prop.defaultValue ""
+                prop.value stunt.Ability
                 prop.children abilities
                 prop.style [ dropdownWidth ]
-                if stunt.Ability.IsNone then
+                if stunt.Ability = "" then
                     input.isDanger
+                onSelectChange (updateStuntAbility dispatch stunt)
             ]
         ]
+
+    let private updateStuntAction dispatch stunt name =
+        { stunt with Action = parseAction name }
+        |> UpdateStunt
+        |> dispatch
 
     let private stuntAction dispatch model stunt =
         let actions = actionOptions
@@ -241,22 +317,30 @@ module View =
         addonGroup [
             addonButton "Action" addonButtonWidth
             Bulma.select [
-                prop.defaultValue ""
+                prop.value (string stunt.Action)
                 prop.children actions
                 prop.style [ dropdownWidth ]
                 if stunt.Action.IsNone then
                     input.isDanger
+                onSelectChange (updateStuntAction dispatch stunt)
             ]
         ]
+
+    let private updateStuntDescription dispatch stunt description =
+        { stunt with Description = description }
+        |> UpdateStunt
+        |> dispatch
+
 
     let stuntDescription dispatch model stunt =
         Bulma.textarea [
             onFocusSelectText
             prop.placeholder "Stunt description"
-            prop.defaultValue ""
+            prop.value stunt.Description
             prop.style [ style.minHeight 100; gapBetweenStunts ]
             if stunt.Description = "" then
                 input.isDanger
+            prop.onTextChange (updateStuntDescription dispatch stunt)
         ]
 
     let private editStunt dispatch model stunt =
