@@ -44,9 +44,9 @@ let abilityName model =
 
 let abilityNamePlural model =
     match model.CampaignType with
-    | None -> "Abilities:"
-    | Some CampaignType.Core -> "Skills:"
-    | Some CampaignType.FAE -> "Approaches:"
+    | None -> "Abilities"
+    | Some CampaignType.Core -> "Skills"
+    | Some CampaignType.FAE -> "Approaches"
 
 let abilityType campaign =
     match campaign with

@@ -18,3 +18,7 @@ $family-primary: 'Open Sans';
 .label, .field-label {
     margin-top: 6px;
 }
+
+.column.first {
+    display: inline-flex;
+}

@@ -11,6 +11,7 @@
     <Compile Include="FateAccelerated.fs" />
     <Compile Include="Campaign.fs" />
     <Compile Include="Characters.fs" />
+    <Compile Include="SystemReference.fs" />
   </ItemGroup>
 
   <ItemGroup />

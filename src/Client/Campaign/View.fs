@@ -11,29 +11,42 @@ open App.Views.Layouts
 
 open Domain.Campaign
 open Domain.System
+open Domain.SystemReference
 
 open Campaign.Types
 
+let private getHelpTopic model forCore forFae =
+    match model.CampaignType with
+    | None -> Html.none
+    | Some CampaignType.Core -> rulesButton "" forCore
+    | Some CampaignType.FAE -> rulesButton "" forFae
+
 let private selectCampaignType dispatch model =
+    let buttons =
+        buttonGroup [
+            {
+                Text = "Fate Core"
+                Color = button.isPrimary
+                Active = model.CampaignType = Some CampaignType.Core
+                OnClick = (fun _ -> SelectCampaignType CampaignType.Core |> dispatch )
+            }
+            {
+                Text = "Fate Accelerated"
+                Color = button.isPrimary
+                Active = model.CampaignType = Some CampaignType.FAE
+                OnClick = (fun _ -> SelectCampaignType CampaignType.FAE |> dispatch)
+            }
+        ]
+
     colLayout [
         labelCol [ Bulma.label "Campaign type:" ]
         {
             Size = [ column.is4 ]
-            Content =
-                buttonGroup [
-                    {
-                        Text = "Fate Core"
-                        Color = button.isPrimary
-                        Active = model.CampaignType = Some CampaignType.Core
-                        OnClick = (fun _ -> SelectCampaignType CampaignType.Core |> dispatch )
-                    }
-                    {
-                        Text = "Fate Accelerated"
-                        Color = button.isPrimary
-                        Active = model.CampaignType = Some CampaignType.FAE
-                        OnClick = (fun _ -> SelectCampaignType CampaignType.FAE |> dispatch)
-                    }
-                ]
+            Content = [
+                yield! buttons
+                getHelpTopic model Topic.FateCore Topic.FateAccelerated
+            ]
+
         }
     ]
 
@@ -68,7 +81,10 @@ let private toggleCustomAbilities dispatch model =
     let text = abilityNamePlural model
 
     colLayout [
-        labelCol [ Bulma.label text ]
+        labelCol [
+            Bulma.label text
+            getHelpTopic model Topic.Skills Topic.Approaches
+        ]
         {
             Size = [ column.is4 ]
             Content =
@@ -130,7 +146,10 @@ let private selectAspectCount dispatch model =
             })
 
     colLayout [
-        labelCol [ Bulma.label "Aspects:"]
+        labelCol [
+            Bulma.label "Aspects"
+            getHelpTopic model Topic.Aspects Topic.Aspects
+        ]
         {
             Size = [ column.is8 ]
             Content = buttonGroup [
@@ -170,7 +189,10 @@ let private adjustRefresh dispatch model =
         })
 
     colLayout [
-        labelCol [ Bulma.label "Refresh:" ]
+        labelCol [
+            Bulma.label "Refresh"
+            getHelpTopic model Topic.Refresh Topic.Refresh
+        ]
         {
             Size = [ column.is6]
             Content = buttonGroup buttons
@@ -189,7 +211,10 @@ let private selectFreeStunts dispatch model =
         })
 
     colLayout [
-        labelCol [ Bulma.label "Free stunts:"]
+        labelCol [
+            Bulma.label "Free stunts"
+            getHelpTopic model Topic.StuntsCore Topic.StuntsFae
+        ]
         {
             Size = [ column.is6 ]
             Content = buttonGroup buttons

@@ -21,11 +21,13 @@ let box (title: string) (children: List<ReactElement>) =
         ]
     ]
 
-let private createColumn (item: ColumnDefinition) =
+let private createColumn index (item: ColumnDefinition) =
     Bulma.column [
         yield! item.Size
         prop.style [ style.textAlign.left ]
         prop.children item.Content
+        if index = 0 then
+            prop.className "first"
     ]
 
 let labelCol content =
@@ -39,7 +41,7 @@ let emptyLabelCol =
 
 let colLayout (cols: ColumnDefinition list) =
     Bulma.columns [
-        prop.children (cols |> List.map createColumn)
+        prop.children (cols |> List.mapi createColumn)
     ]
 
 let fluidColLayout (elements: ReactElement list) =

@@ -4,6 +4,7 @@ open Feliz
 open Feliz.Bulma
 open Browser.Types
 
+open Domain.SystemReference
 open App.Icons
 open Browser.Types
 
@@ -28,6 +29,7 @@ let buttonGroup (items: ButtonState list) =
             //buttons.isCentered
             buttons.hasAddons
             prop.children (items |> List.map createButton)
+            prop.style [ style.display.inlineFlex ]
         ]
     ]
 
@@ -81,6 +83,23 @@ let newItemButton (newItemValue: string option) (onAdd: MouseEvent -> unit) =
                 ]
             ]
         ]
+
+let rulesButton (text: string) (topic: Topic) =
+    Html.a [
+        prop.className "button is-small"
+        prop.href (srdLink topic)
+        prop.target.blank
+        prop.style [
+            style.marginLeft 10
+            style.marginTop 5
+            style.borderRadius 5
+        ]
+        prop.children [
+            Bulma.icon [
+                prop.className Fa.question
+            ]
+        ]
+    ]
 
 let newItemInputs
     (name: string)
