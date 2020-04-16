@@ -415,10 +415,7 @@ module View =
 
     let private addNewStunt dispatch model =
         if canAddNewStunt model
-        then imgButton "Buy stunt with Refresh" Fa.plus [
-                prop.onClick (fun _ -> BuyStunt |> dispatch)
-                button.isInfo
-            ]
+        then newItemButton (Some "Buy stunt with Refresh") (fun _ -> BuyStunt |> dispatch)
         else Html.none
 
     let selectStunts dispatch model =

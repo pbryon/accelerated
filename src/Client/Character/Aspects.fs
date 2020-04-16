@@ -316,14 +316,4 @@ module View =
         match nextAspect model with
         | None -> Html.none
         | Some aspect ->
-            colLayout [
-                emptyLabelCol
-                {
-                    Size = [ column.is4 ]
-                    Content = [
-                        imgButton "" Fa.plus [
-                            prop.onClick (fun _ -> AddAspect aspect |> dispatch)
-                        ]
-                    ]
-                }
-            ]
+            newItemButton None (fun _ -> AddAspect aspect |> dispatch)
