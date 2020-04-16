@@ -15,6 +15,15 @@ $family-primary: 'Open Sans';
 // Bulma
 @import "~bulma/bulma";
 
+.index h3, .copyright h3 {
+    padding-top: 25px;
+    margin-bottom: 12px !important;
+}
+
+.index p, .copyright p {
+    padding: 10px;
+}
+
 .label, .field-label {
     margin-top: 6px;
 }

@@ -43,6 +43,11 @@ let private navbarStart dispatch user currentPage =
             prop.href (toHash Page.CampaignCreation)
             prop.text "Characters"
         ]
+        Bulma.navbarItemA [
+            yield! isMenuItemActive Page.Copyright currentPage
+            prop.href (toHash Page.Copyright)
+            prop.text "Copyright"
+        ]
         //viewLoginLogout dispatch user currentPage
     ]
 

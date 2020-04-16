@@ -38,6 +38,10 @@ let urlUpdate (result : Page option) model =
         { model with CurrentPage = CurrentPage.Index}
         |> withoutCommands
 
+    | Some Page.Copyright ->
+        { model with CurrentPage = CurrentPage.Copyright }
+        |> withoutCommands
+
     | Some Page.CampaignCreation ->
         match model.User with
         | Some user ->

@@ -7,6 +7,7 @@ type CurrentPage =
     | Index
     | CampaignCreation of Campaign.Types.Model
     | CharacterCreation of Character.Types.Model
+    | Copyright
 
 type Model = {
     User: UserData option

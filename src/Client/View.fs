@@ -15,6 +15,9 @@ let view model dispatch =
         | CurrentPage.Index ->
             Index.View.view
 
+        | CurrentPage.Copyright ->
+            Copyright.View.view
+
         | CurrentPage.CampaignCreation submodel ->
             Campaign.View.view (CampaignMsg >> dispatch) submodel
 

@@ -33,6 +33,7 @@
         <Compile Include="Character/State.fs" />
         <Compile Include="Character/View.fs" />
         <Compile Include="Index/View.fs" />
+        <Compile Include="Index/Copyright.fs" />
         <Compile Include="State.fs" />
         <Compile Include="View.fs" />
         <Compile Include="App.fs" />
