@@ -4,7 +4,7 @@ open Feliz
 open Feliz.Bulma
 
 type ColumnDefinition = {
-    Size: IReactProperty list
+    Props: IReactProperty list
     Content: ReactElement list
 }
 
@@ -23,16 +23,15 @@ let box (title: string) (children: List<ReactElement>) =
 
 let private createColumn index (item: ColumnDefinition) =
     Bulma.column [
-        yield! item.Size
+        yield! item.Props
         prop.style [ style.textAlign.left ]
         prop.children item.Content
-        if index = 0 then
-            prop.className "first"
+        prop.className (sprintf "column-%i" (index + 1))
     ]
 
 let labelCol content =
     {
-        Size = [ column.is2; column.isOffset1 ]
+        Props = [ column.is2; column.isOffset1 ]
         Content = content
     }
 

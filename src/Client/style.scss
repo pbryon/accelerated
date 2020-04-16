@@ -19,6 +19,32 @@ $family-primary: 'Open Sans';
     margin-top: 6px;
 }
 
-.column.first {
+.column.column-1 {
     display: inline-flex;
+}
+
+.ability-summary {
+    display: inline-flex !important;
+    margin-bottom: 10px;
+}
+
+.refresh {
+    display: inline-flex !important;
+}
+
+.stunt-definition, .refresh {
+    margin-bottom: 30px !important;
+}
+
+.column.column-2 .refresh + .add-button,
+.column.column-2 .stunt-definition + .add-button {
+    padding-left: 0;
+}
+
+.ability-rank {
+    width: 40px;
+}
+
+.ability-name {
+    width: 150px;
 }

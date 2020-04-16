@@ -67,22 +67,19 @@ let resetButton (buttonText: string) (handler: MouseEvent -> unit) =
         ]
     ]
 
-let newItemButton (newItemValue: string option) (onAdd: MouseEvent -> unit) =
-    match newItemValue with
-    | Some _ ->
-        Html.none
-
-    | None ->
-        Bulma.column [
-            column.is4
-            prop.children [
-                imgButton "" Fa.plus [
-                    button.isInfo
-                    prop.onClick onAdd
-                    prop.style [ style.marginTop 5 ]
-                ]
+let newItemButton (text: string) (onAdd: MouseEvent -> unit) =
+    Bulma.column [
+        column.is4
+        prop.className "add-button"
+        prop.children [
+            imgButton text Fa.plus [
+                prop.className "add-item"
+                button.isInfo
+                prop.onClick onAdd
+                prop.style [ style.marginTop 5 ]
             ]
         ]
+    ]
 
 let rulesButton (text: string) (topic: Topic) =
     Html.a [
@@ -91,7 +88,7 @@ let rulesButton (text: string) (topic: Topic) =
         prop.target.blank
         prop.style [
             style.marginLeft 10
-            style.marginTop 5
+            style.marginTop 3
             style.borderRadius 5
         ]
         prop.children [
@@ -132,9 +129,10 @@ let newItemInputs
             ]
         ]
 
-let addonGroup (items: ReactElement list) =
+let addonGroup (className: string) (items: ReactElement list) =
     Bulma.field [
         field.hasAddons
+        prop.className className
         prop.children [
             yield! items |> List.map (fun x ->
                 Bulma.control [ x] )

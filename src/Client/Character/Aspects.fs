@@ -4,8 +4,10 @@ open Feliz
 
 open Global
 open Utils
+
 open Domain.Campaign
 open Domain.System
+open Domain.SystemReference
 
 open Character.Types
 
@@ -186,7 +188,7 @@ module View =
         match existing with
         | Some (Aspect.HighConcept name) ->
             let aspectName = Convert.aspectName name
-            addonGroup [
+            addonGroup "high-concept" [
                 addonButton "High Concept" aspectButtonWidth
                 Bulma.textInput [
                     prop.name "high-concept"
@@ -209,7 +211,7 @@ module View =
         match existing with
         | Some (Aspect.Trouble name) ->
             let aspectName = Convert.aspectName name
-            addonGroup [
+            addonGroup "trouble" [
                 addonButton "Trouble" aspectButtonWidth
                 Bulma.textInput [
                     prop.name "trouble"
@@ -242,7 +244,7 @@ module View =
         match existing with
         | Some (Aspect.PhaseTrio (phase, name)) ->
             let aspectName = Convert.aspectName name
-            addonGroup [
+            addonGroup "phase-trio-aspect" [
                 addonButton phaseName aspectButtonWidth
                 Bulma.textInput [
                     prop.name (sprintf "phase-%i" number)
@@ -277,7 +279,7 @@ module View =
         match existing with
         | Some (Aspect.Other (_, aspectName)) ->
             let text = sprintf "Aspect %i" (start + number)
-            addonGroup [
+            addonGroup "other-aspect" [
                 addonButton text aspectButtonWidth
                 Bulma.textInput [
                     prop.name (sprintf "other-aspect-%i" number)
@@ -300,9 +302,12 @@ module View =
 
     let chooseAspects dispatch model =
         colLayout [
-            labelCol [ Bulma.label "Aspects:" ]
+            labelCol [
+                Bulma.label "Aspects"
+                rulesButton "" Topic.Aspects
+            ]
             {
-                Size = [ column.is8 ]
+                Props = [ column.is8 ]
                 Content = [
                     highConcept dispatch model
                     trouble dispatch model
@@ -316,4 +321,4 @@ module View =
         match nextAspect model with
         | None -> Html.none
         | Some aspect ->
-            newItemButton None (fun _ -> AddAspect aspect |> dispatch)
+            newItemButton "" (fun _ -> AddAspect aspect |> dispatch)

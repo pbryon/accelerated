@@ -39,9 +39,9 @@ let private selectCampaignType dispatch model =
         ]
 
     colLayout [
-        labelCol [ Bulma.label "Campaign type:" ]
+        labelCol [ Bulma.label "Campaign type" ]
         {
-            Size = [ column.is4 ]
+            Props = [ column.is4 ]
             Content = [
                 yield! buttons
                 getHelpTopic model Topic.FateCore Topic.FateAccelerated
@@ -86,7 +86,7 @@ let private toggleCustomAbilities dispatch model =
             getHelpTopic model Topic.Skills Topic.Approaches
         ]
         {
-            Size = [ column.is4 ]
+            Props = [ column.is4 ]
             Content =
                 buttonGroup [
                     {
@@ -116,7 +116,11 @@ let private customiseAbilities dispatch model =
         let onChangeNewSkill value = UpdateNewAbility value |> dispatch
         let onAddSkill _ = AddNewAbility |> dispatch
 
-        let showInputButton = newItemButton model.NewAbility onInputSkill
+        let showInputButton =
+            match model.NewAbility with
+            | Some _ ->
+                Html.none
+            | None -> newItemButton "" onInputSkill
 
         let title = abilityName model
         let inputFields = newItemInputs title model.NewAbility onChangeNewSkill onAddSkill
@@ -129,7 +133,7 @@ let private customiseAbilities dispatch model =
         colLayout [
             labelCol []
             {
-                Size = [ column.is8 ]
+                Props = [ column.is8 ]
                 Content = [ fluidColLayout elements ]
             }
         ]
@@ -151,7 +155,7 @@ let private selectAspectCount dispatch model =
             getHelpTopic model Topic.Aspects Topic.Aspects
         ]
         {
-            Size = [ column.is8 ]
+            Props = [ column.is8 ]
             Content = buttonGroup [
                 {
                     Text = "High Concept"
@@ -194,7 +198,7 @@ let private adjustRefresh dispatch model =
             getHelpTopic model Topic.Refresh Topic.Refresh
         ]
         {
-            Size = [ column.is6]
+            Props = [ column.is6]
             Content = buttonGroup buttons
         }
     ]
@@ -216,7 +220,7 @@ let private selectFreeStunts dispatch model =
             getHelpTopic model Topic.StuntsCore Topic.StuntsFae
         ]
         {
-            Size = [ column.is6 ]
+            Props = [ column.is6 ]
             Content = buttonGroup buttons
         }
     ]
@@ -255,9 +259,9 @@ let private selectMaxStunts dispatch model =
                 })
 
             colLayout [
-                labelCol [ Bulma.label "Maximum stunts:"]
+                labelCol [ Bulma.label "Maximum stunts"]
                 {
-                    Size = [ column.is8 ]
+                    Props = [ column.is8 ]
                     Content = buttonGroup buttons
                 }
             ]
@@ -266,7 +270,7 @@ let finishButton dispatch model =
     colLayout [
         labelCol [ Html.none ]
         {
-            Size = [ column.is4 ]
+            Props = [ column.is4 ]
             Content = [
                 imgButtonRight "Create character" Fa.chevronRight [
                     prop.onClick (fun _ -> FinishClicked |> dispatch)

@@ -3,6 +3,7 @@ module Character.Types
 open Global
 open Domain.Campaign
 open Domain.System
+open Feliz
 
 type AbilityRank =
     | Ok of int

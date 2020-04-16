@@ -1,16 +1,28 @@
 module Character.Stunts
 
 open Feliz
+open Feliz.Bulma
 
 open Utils
 
-open Domain
 open Domain.System
 open Domain.Campaign
+open Domain.SystemReference
 
 open Character.Types
 open App.Icons
+open App.Views.Controls
+open App.Views.Layouts
 open Fable.Core
+
+let private getHelpTopic model forCore forFae =
+    match model.Campaign with
+    | None ->
+        Html.none
+    | Some (Campaign.Core _) ->
+        rulesButton "" forCore
+    | Some (Campaign.FAE _) ->
+        rulesButton "" forFae
 
 let private refreshValue (Refresh refresh) = refresh
 
@@ -115,6 +127,7 @@ let private freeStunts model =
 
 let private maxStunts model =
     let defaultMax = initialRefresh model + freeStunts model
+    JS.console.log (sprintf "Default max stunts: %i" defaultMax)
 
     match model.Campaign with
     | None ->
@@ -126,9 +139,12 @@ let private maxStunts model =
 
 let private canAddNewStunt model =
     let maximum = maxStunts model
+    JS.console.log (sprintf "Maximum: %i" maximum)
     let currentTotal = model.Stunts.Length
 
-    currentTotal < maximum
+    let output = currentTotal < maximum
+    JS.console.log (sprintf "Can add new: %b" output)
+    output
 
 module State =
     let addRefresh (model: Model)  =
@@ -213,16 +229,9 @@ module State =
         )
 
 module View =
-    open Feliz.Bulma
-
-    open Global
-    open App.Views.Layouts
-    open App.Views.Controls
-
     let private addonButtonWidth = style.width 150
     let private stuntNameWidth = style.width 300
     let private dropdownWidth = style.width 200
-    let private gapBetweenStunts = style.marginBottom 30
 
     let private toOptions (list: (string * string) list) =
         list
@@ -268,9 +277,9 @@ module View =
 
     let private currentRefresh model =
         Html.div [
-            prop.style [ gapBetweenStunts ]
+            prop.className "refresh"
             prop.children [
-                addonGroup [
+                addonGroup "refresh-summary" [
                     addonButton "Refresh" addonButtonWidth
                     Bulma.button [
                         if model.Refresh > 0
@@ -282,6 +291,7 @@ module View =
                         prop.text model.Refresh
                     ]
                 ]
+                getHelpTopic model Topic.Refresh Topic.Refresh
             ]
         ]
 
@@ -291,7 +301,7 @@ module View =
         |> dispatch
 
     let private stuntName dispatch model stunt =
-        addonGroup [
+        addonGroup "stunt" [
             addonButton "Name" addonButtonWidth
             Bulma.textInput [
                 onFocusSelectText
@@ -328,7 +338,7 @@ module View =
         let activation = activationOptions
         let selectedItem = string stunt.Activation
 
-        addonGroup [
+        addonGroup "stunt-activation" [
             addonButton "Activation" addonButtonWidth
             Bulma.select [
                 prop.value selectedItem
@@ -349,7 +359,7 @@ module View =
        let ability = abilityName model
        let abilities = abilityOptions model
 
-       addonGroup [
+       addonGroup "stunt-ability" [
             addonButton ability addonButtonWidth
             Bulma.select [
                 prop.value stunt.Ability
@@ -369,7 +379,7 @@ module View =
     let private stuntAction dispatch model stunt =
         let actions = actionOptions
 
-        addonGroup [
+        addonGroup "stunt-action" [
             addonButton "Action" addonButtonWidth
             Bulma.select [
                 prop.value (string stunt.Action)
@@ -402,7 +412,7 @@ module View =
         let tight = Some (prop.style [ style.paddingBottom (length.rem 0.25) ])
         Bulma.columns [
             columns.isMultiline
-            prop.style [ gapBetweenStunts ]
+            prop.className "stunt-definition"
             prop.children [
                 removeStunt tight dispatch stunt
                 row tight [ stuntName dispatch model stunt ]
@@ -415,7 +425,7 @@ module View =
 
     let private addNewStunt dispatch model =
         if canAddNewStunt model
-        then newItemButton (Some "Buy stunt with Refresh") (fun _ -> BuyStunt |> dispatch)
+        then newItemButton "Buy stunt" (fun _ -> BuyStunt |> dispatch)
         else Html.none
 
     let selectStunts dispatch model =
@@ -424,9 +434,11 @@ module View =
             |> List.map (editStunt dispatch model)
 
         colLayout [
-            labelCol [ Bulma.label "Stunts:" ]
+            labelCol [
+                Bulma.label "Stunts"
+                getHelpTopic model Topic.StuntsCore Topic.StuntsFae ]
             {
-                Size = [ column.is6 ]
+                Props = [ column.is6 ]
                 Content = [
                     currentRefresh model
                     yield! rows

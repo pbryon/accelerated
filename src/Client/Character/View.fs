@@ -9,6 +9,8 @@ open App.Views.Controls
 open App.Icons
 
 open Domain.System
+open Domain.SystemReference
+open Domain.Campaign
 
 open Character.Types
 open Character.Aspects
@@ -18,12 +20,45 @@ open Abilities.View
 open Aspects.View
 open Stunts.View
 
+let private getHelpTopic model forCore forFae =
+    match model.Campaign with
+    | None ->
+        Html.none
+    | Some (Campaign.Core _) ->
+        rulesButton "" forCore
+    | Some (Campaign.FAE _) ->
+        rulesButton "" forFae
+
+let ruleSetUsed model =
+    let ruleset =
+        match model.Campaign with
+        | None -> "None"
+        | Some (Campaign.Core _) -> "Fate Core"
+        | Some (Campaign.FAE _) -> "Fate Accelerated"
+
+    colLayout [
+        labelCol [ Bulma.label "Ruleset" ]
+        {
+            Props = [ column.is4 ]
+            Content = [
+                Html.span [
+                    prop.text ruleset
+                    prop.style [
+                        style.marginTop 5
+                        style.display.inlineFlex
+                    ]
+                ]
+                getHelpTopic model Topic.FateCore Topic.FateAccelerated
+            ]
+        }
+    ]
+
 let setPlayerName dispatch model =
     let player = Convert.playerName model.Player
     colLayout [
-        labelCol [ Bulma.label "Player:" ]
+        labelCol [ Bulma.label "Player" ]
         {
-            Size = [ column.is4 ]
+            Props = [ column.is4 ]
             Content = [
                 Bulma.textInput [
                     prop.name "PlayerName"
@@ -42,9 +77,9 @@ let setPlayerName dispatch model =
 let setCharacterName dispatch model =
     let character = Convert.characterName model.CharacterName
     colLayout [
-        labelCol [ Bulma.label "Character:" ]
+        labelCol [ Bulma.label "Character" ]
         {
-            Size = [ column.is4 ]
+            Props = [ column.is4 ]
             Content = [
                 Bulma.textInput [
                     prop.name "CharacterName"
@@ -68,7 +103,7 @@ let private backAndFinishButtons dispatch model =
     colLayout [
         labelCol [ Html.none ]
         {
-            Size = [ column.is4 ]
+            Props = [ column.is4 ]
             Content = [
                 imgButton "Back" Fa.chevronLeft [
                     prop.onClick (fun _ -> BackToCampaignClicked userData |> dispatch )
@@ -84,6 +119,7 @@ let private backAndFinishButtons dispatch model =
 let view dispatch model =
     [
         resetButton "Reset" (fun _ -> ResetCharacter model.Campaign |> dispatch)
+        ruleSetUsed model
         setPlayerName dispatch model
         setCharacterName dispatch model
         Html.hr []

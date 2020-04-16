@@ -1,17 +1,20 @@
 module Character.Abilities
 
+open System.Text.RegularExpressions
+
 open Feliz
+open Feliz.Bulma
 
 open Utils
 
 open Domain
 open Domain.System
 open Domain.Campaign
+open Domain.SystemReference
 
 open Character.Types
-open App.Icons
-open Browser.Types
-open Fable.Core
+open App.Views.Controls
+open App.Views.Layouts
 
 type RankValidation = {
     Rank: int
@@ -20,6 +23,15 @@ type RankValidation = {
     MinimumRank: int
     IsErrored: bool
 }
+
+let private getHelpTopic model forCore forFae =
+    match model.Campaign with
+    | None ->
+        Html.none
+    | Some (Campaign.Core _) ->
+        rulesButton "" forCore
+    | Some (Campaign.FAE _) ->
+        rulesButton "" forFae
 
 let private abilityNamePlural model =
     match model.Campaign with
@@ -219,16 +231,7 @@ module State =
         |> noneExist (isAbilityErrored validated)
 
 module View =
-    open System.Text.RegularExpressions
-
-    open Feliz.Bulma
-
-    open Global
-    open App.Views.Layouts
-    open App.Views.Controls
-
     let abilityNameWidth = style.width 150
-    let abilityRankWidth = style.width 40
 
     let private rankButton result =
         [1 .. result.Available]
@@ -259,8 +262,8 @@ module View =
         let description =
             Bulma.button [
                 prop.tabIndex -1
+                prop.className "ability-summary"
                 button.isWhite
-                prop.style [ style.textAlign.left ]
                 prop.text "Available ranks"
                 if not allAssigned then
                     yield! [
@@ -269,9 +272,15 @@ module View =
                     ]
             ]
 
-        ranks
-        |> List.append [ description ]
-        |> addonGroup
+        let buttons = addonGroup "ability-summary" [
+            description
+            yield! ranks
+        ]
+
+        [
+            buttons
+            getHelpTopic model Topic.PickSkills Topic.PickApproaches
+        ]
 
     let private updateAbility ability dispatch text =
         let parsedRank =
@@ -299,12 +308,12 @@ module View =
         Bulma.column [
             columnWidth
             prop.children [
-                addonGroup [
+                addonGroup "edit-ability" [
                     addonButton ability.Name abilityNameWidth
                     Bulma.textInput [
                         text.hasTextCentered
                         prop.value value
-                        prop.style [ abilityRankWidth ]
+                        prop.className "ability-rank"
                         prop.pattern (Regex "^[0-9]+$")
                         onFocusSelectText
                         prop.onTextChange (updateAbility ability dispatch)
@@ -339,11 +348,14 @@ module View =
         if fields.Length = 0
         then Html.none
         else colLayout [
-            labelCol [ Bulma.label (abilityName + ":") ]
+            labelCol [
+                Bulma.label abilityName
+                getHelpTopic model Topic.Skills Topic.Approaches
+            ]
             {
-                Size = [ columnWidth ]
+                Props = [ columnWidth ]
                 Content = [
-                    abilitySummary model
+                    yield! abilitySummary model
                     Bulma.columns [
                         columns.isMultiline
                         prop.children fields

@@ -6,6 +6,8 @@ type Topic =
     | FateAccelerated
     | Approaches
     | Aspects
+    | PickSkills
+    | PickApproaches
     | Refresh
     | Skills
     | StuntsCore
@@ -21,6 +23,10 @@ let srdLink (topic: Topic) =
         "https://fate-srd.com/fate-accelerated/how-do-stuff-outcomes-actions-and-approaches#choose-your-approach"
     | Topic.Aspects ->
         "https://fate-srd.com/fate-core/aspects-fate-points"
+    | Topic.PickSkills ->
+        "https://fate-srd.com/fate-core/skills#pick-and-rate-your-characters-skills"
+    | Topic.PickApproaches ->
+        "https://fate-srd.com/fate-accelerated/how-do-stuff-outcomes-actions-and-approaches#choose-your-approach"
     | Topic.Refresh ->
         "https://fate-srd.com/fate-core/fate-point-economy#refresh"
     | Topic.Skills ->
