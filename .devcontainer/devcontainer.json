@@ -1,11 +1,25 @@
 {
-	"name": "SAFE",
+	"name": "accelerated",
 	"dockerFile": "Dockerfile",
 	"appPort": [8080, 8085],
 	"extensions": [
 		"ionide.ionide-fsharp",
         "ms-vscode.csharp",
         "editorconfig.editorconfig",
-        "msjsdiag.debugger-for-chrome"
-	]
+        "msjsdiag.debugger-for-chrome",
+        "firefox-devtools.vscode-firefox-debug",
+        "yzhang.markdown-all-in-one",
+        "gruntfuggly.todo-tree",
+        "pflannery.vscode-versionlens",
+        "coenraads.bracket-pair-colorizer",
+        "sleistner.vscode-fileutils",
+        "eamodio.gitlens",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense"
+    ],
+    "settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"FSharp.useSdkScripts": true
+    },
+    "postCreateCommand": "dotnet restore"
 }

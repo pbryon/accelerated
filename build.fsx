@@ -11,6 +11,7 @@ open System
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
+open Fake.Runtime
 
 Target.initEnvironment ()
 
@@ -89,18 +90,13 @@ Target.create "Run" (fun _ ->
     let client = async {
         runTool yarnTool "webpack-dev-server" __SOURCE_DIRECTORY__
     }
-    let browser = async {
-        do! Async.Sleep 5000
-        openBrowser "http://localhost:8080"
-    }
 
-    let vsCodeSession = Environment.hasEnvironVar "vsCodeSession"
     let safeClientOnly = Environment.hasEnvironVar "safeClientOnly"
 
     let tasks =
         [ if not safeClientOnly then yield server
           yield client
-          if not vsCodeSession then yield browser ]
+        ]
 
     tasks
     |> Async.Parallel

@@ -20,14 +20,25 @@ RUN dotnet tool install fake-cli -g
 # Install Paket
 RUN dotnet tool install paket -g
 
+RUN dotnet tool install femto -g
+
 # add dotnet tools to path to pick up fake and paket installation
 ENV PATH="/root/.dotnet/tools:${PATH}"
 
-# Copy the source code to /app directory and
-WORKDIR /app
+# enable ports for server and client:
+ENV CLIENT_PORT="3000"
+ENV SERVER_PROXY_PORT="3005"
+
+EXPOSE ${CLIENT_PORT}
+
+# Copy the source code to /app directory
 COPY . /app
+WORKDIR /app
 
 # Install all .NET dependencies
-RUN paket restore
+RUN cd /app
+
+RUN paket restore --force
+RUN femto restore $PWD/src/Client/Client.fsproj
 
 ENTRYPOINT [ "fake", "build", "-t", "Run" ]

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 
 # Add keys and sources lists
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash
@@ -19,6 +19,9 @@ RUN dotnet tool install fake-cli -g
 
 # Install Paket
 RUN dotnet tool install paket -g
+
+# Install Femto
+RUN dotnet tool install femto -g
 
 # add dotnet tools to path to pick up fake and paket installation
 ENV PATH="/root/.dotnet/tools:${PATH}"

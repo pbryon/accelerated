@@ -9,13 +9,7 @@ This is a character generator for roleplaying characters in:
 
 It was built using F# and the [SAFE stack](https://safe-stack.github.io/docs/) with [Feliz](https://github.com/Zaid-Ajaj/Feliz) and [Feliz.Bulma](https://github.com/Dzoukr/Feliz.Bulma)
 
-## Editing the project
-
-I prefer [VS Code](https://code.visualstudio.com/download) with [Ionide](https://ionide.io/), but your mileage may vary.
-
-If this is your first foray into F#, check out my [F# resources](https://github.com/pbryon/resources/blob/master/topics/F%23.md) or [F# for fun and profit](https://fsharpforfunandprofit.com)
-
-## Getting up and running
+## Running the project
 
 ### Docker
 
@@ -25,10 +19,10 @@ prerequisites.
 ```bash
 $ docker build --tag accelerated .
 [...]
-$ docker run -d -p 8080:8080 -p 8085:8085 accelerated
+$ docker run -d accelerated
 ```
 
-Point your browser to [localhost:8080](http://localhost:8080).
+Point your browser to [localhost:3000](http://localhost:3000).
 
 ### Locally
 
@@ -76,3 +70,22 @@ $ femto restore src/Client/Client.fsproj
 To view the project in action, open your browser to [`http://localhost:8080`](http://localhost:8080).
 
 This runs the app in watch mode with hot reloading when any source files change.
+
+## Editing the project
+
+I prefer [VS Code](https://code.visualstudio.com/download), but your mileage may vary.
+
+### Docker (dev container)
+
+If you're using VS Code and haven't ever used a development container, follow [these instructions](https://code.visualstudio.com/docs/remote/containers)
+
+It comes pre-loaded with Ionide and a couple of extensions to make your life easier.
+
+### Locally
+
+Depending on your editor:
+* VS Code: install the [Ionide](https://ionide.io/) extension
+* Visual Studio has built-in support for F#
+* vim: have a look at [F# support for Vim](https://github.com/fsharp/vim-fsharp)
+
+If this is your first foray into F#, check out my [F# resources](https://github.com/pbryon/resources/blob/master/topics/F%23.md) or [F# for fun and profit](https://fsharpforfunandprofit.com)
