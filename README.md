@@ -17,7 +17,22 @@ If this is your first foray into F#, check out my [F# resources](https://github.
 
 ## Getting up and running
 
-### 1. Install dependencies
+### Docker
+
+The bundled `Dockerfile` can be used to build and run the project without any
+prerequisites.
+
+```bash
+$ docker build --tag accelerated .
+[...]
+$ docker run -d -p 8080:8080 -p 8085:8085 accelerated
+```
+
+Point your browser to [localhost:8080](http://localhost:8080).
+
+### Locally
+
+#### 1. Install dependencies
 
 If you haven't already, install the following dotnet global tools:
 
@@ -30,7 +45,7 @@ dotnet install -g femto
 
 and install [yarn](https://classic.yarnpkg.com/en/docs/install)
 
-#### Pre-existing `fake`
+##### Pre-existing `fake`
 
 If running under [WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) with Ubuntu 16.04/18.04, you might run into an issue with a pre-existing [`fake`](https://packages.ubuntu.com/bionic/fake) command in `/usr/sbin`. To check for this issue, run:
 
@@ -42,7 +57,7 @@ dotnet tool uninstall -g fake-cli
 dotnet tool install -g fake-cli
 ```
 
-### 2. Restore the project
+#### 2. Restore the project
 
 Then restore the project:
 
@@ -53,7 +68,7 @@ paket restore
 $ femto restore src/Client/Client.fsproj
 ```
 
-### 3. Build the project
+#### 3. Build the project
 
 1. through CLI: `fake build -t Run`
 2. from VS Code: run the `Watch Client` target (`ctrl-shift-B`).
