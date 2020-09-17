@@ -13,3 +13,5 @@ let view =
             Html.p "To create a character, click on the links above."
         ]
   ]
+
+  // TODO: update this and other views to Feliz.Bulma 2.xx API
