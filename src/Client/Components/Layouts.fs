@@ -9,7 +9,7 @@ type ColumnDefinition = {
 }
 
 let box (title: string) (children: List<ReactElement>) =
-    let title3 = Bulma.title3 title
+    let title3 = Bulma.title.h3 title
     Bulma.box [
         prop.className "main-box"
         prop.style [ style.marginTop 10; style.padding 15 ]

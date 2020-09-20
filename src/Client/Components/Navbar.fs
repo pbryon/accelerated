@@ -36,6 +36,7 @@ let private isMenuItemActive page currentPage =
 //           str <| "Logout " + user.UserName
 //         ]
 
+(*
 let private navbarStart dispatch user currentPage =
     Bulma.navbarStart [
         Bulma.navbarItemA [
@@ -51,6 +52,7 @@ let private navbarStart dispatch user currentPage =
         //viewLoginLogout dispatch user currentPage
     ]
 
+
 let private navbarEnd =
     Bulma.navbarEnd [
         Bulma.navbarItemDiv [
@@ -64,14 +66,16 @@ let private navbarEnd =
             ]
         ]
     ]
+*)
 
 let view dispatch user currentPage =
     Bulma.navbar [
-        navbar.isPrimary
+        color.isPrimary
         prop.children [
             Bulma.container [
                 container.isFluid
                 prop.children [
+                    (*
                     Bulma.navbarBrand [
                         Bulma.navbarItemA [
                             prop.href "#"
@@ -84,6 +88,7 @@ let view dispatch user currentPage =
                         navbarStart dispatch user currentPage
                         navbarEnd
                     ]
+                    *)
                 ]
             ]
         ]
