@@ -26,13 +26,13 @@ let private selectCampaignType dispatch model =
         buttonGroup [
             {
                 Text = "Fate Core"
-                Color = button.isPrimary
+                Color = color.isPrimary
                 Active = model.CampaignType = Some CampaignType.Core
                 OnClick = (fun _ -> SelectCampaignType CampaignType.Core |> dispatch )
             }
             {
                 Text = "Fate Accelerated"
-                Color = button.isPrimary
+                Color = color.isPrimary
                 Active = model.CampaignType = Some CampaignType.FAE
                 OnClick = (fun _ -> SelectCampaignType CampaignType.FAE |> dispatch)
             }
@@ -54,7 +54,7 @@ let private abilityTextBox (onTextChange: string -> string -> unit ) (item: stri
     Bulma.column [
         column.isOneThird
         prop.children [
-            Bulma.textInput [
+            Bulma.input.text [
                 prop.placeholder item
                 prop.defaultValue item
                 prop.name item
@@ -91,13 +91,13 @@ let private toggleCustomAbilities dispatch model =
                 buttonGroup [
                     {
                         Text = "Use default"
-                        Color = button.isPrimary
+                        Color = color.isPrimary
                         Active = model.AbilityType = AbilityType.Default
                         OnClick = toggleCustomSkills
                     }
                     {
                         Text = "Customise"
-                        Color = button.isPrimary
+                        Color = color.isPrimary
                         Active = model.AbilityType = AbilityType.Custom
                         OnClick = toggleCustomSkills
                     }

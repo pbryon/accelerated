@@ -34,7 +34,7 @@ let view =
         prop.className "copyright"
         prop.style [ style.textAlign.justify ]
         prop.children [
-            Bulma.title3 [
+            Bulma.title.h3 [
                 prop.text "Copyright"
                 prop.style [ style.textAlign.center ]
             ]

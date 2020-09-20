@@ -281,12 +281,12 @@ module View =
             prop.children [
                 addonGroup "refresh-summary" [
                     addonButton "Refresh" addonButtonWidth
-                    Bulma.button [
+                    Bulma.button.a [
                         if model.Refresh > 0
-                        then button.isPrimary
-                        else button.isWarning
+                        then color.isPrimary
+                        else color.isWarning
 
-                        button.isLight
+                        color.isLight
                         prop.tabIndex -1
                         prop.text model.Refresh
                     ]
@@ -303,7 +303,7 @@ module View =
     let private stuntName dispatch model stunt =
         addonGroup "stunt" [
             addonButton "Name" addonButtonWidth
-            Bulma.textInput [
+            Bulma.input.text [
                 onFocusSelectText
                 prop.placeholder (
                     if stunt.Type = Free
@@ -311,7 +311,7 @@ module View =
                     else "Stunt name"
                 )
                 if stunt.Name = "" then
-                    input.isDanger
+                    color.isDanger
                 prop.value stunt.Name
                 prop.style [ stuntNameWidth ]
                 prop.onTextChange (updateStuntName dispatch stunt)
@@ -323,7 +323,7 @@ module View =
         then Html.none
         else row padding [
             imgButton "Remove stunt" Fa.times [
-                button.isDanger
+                color.isDanger
                 prop.onClick (fun _ -> RemoveStunt stunt.Index |> dispatch)
             ]
         ]
@@ -345,7 +345,7 @@ module View =
                 prop.children activation
                 prop.style [ dropdownWidth ]
                 if stunt.Activation.IsNone then
-                    input.isDanger
+                    color.isDanger
                 onSelectChange (updateStuntActivation dispatch stunt)
             ]
         ]
@@ -366,7 +366,7 @@ module View =
                 prop.children abilities
                 prop.style [ dropdownWidth ]
                 if stunt.Ability = "" then
-                    input.isDanger
+                    color.isDanger
                 onSelectChange (updateStuntAbility dispatch stunt)
             ]
         ]
@@ -386,7 +386,7 @@ module View =
                 prop.children actions
                 prop.style [ dropdownWidth ]
                 if stunt.Action.IsNone then
-                    input.isDanger
+                    color.isDanger
                 onSelectChange (updateStuntAction dispatch stunt)
             ]
         ]
@@ -404,7 +404,7 @@ module View =
             prop.value stunt.Description
             prop.style [ style.minHeight 100 ]
             if stunt.Description = "" then
-                input.isDanger
+                color.isDanger
             prop.onTextChange (updateStuntDescription dispatch stunt)
         ]
 

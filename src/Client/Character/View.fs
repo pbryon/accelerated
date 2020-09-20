@@ -60,7 +60,7 @@ let setPlayerName dispatch model =
         {
             Props = [ column.is4 ]
             Content = [
-                Bulma.textInput [
+                Bulma.input.text [
                     prop.name "PlayerName"
                     prop.placeholder "Player name"
                     prop.value player
@@ -68,7 +68,7 @@ let setPlayerName dispatch model =
                     prop.onTextChange (fun value -> SetPlayerName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                     if player = "" then
-                        input.isDanger
+                        color.isDanger
                 ]
             ]
         }
@@ -81,7 +81,7 @@ let setCharacterName dispatch model =
         {
             Props = [ column.is4 ]
             Content = [
-                Bulma.textInput [
+                Bulma.input.text [
                     prop.name "CharacterName"
                     prop.placeholder "Character name"
                     prop.value character
@@ -89,7 +89,7 @@ let setCharacterName dispatch model =
                     prop.onTextChange (fun value -> SetCharacterName value |> dispatch)
                     prop.style [ style.maxWidth (length.perc 60) ]
                     if character = "" then
-                        input.isDanger
+                        color.isDanger
                 ]
             ]
         }

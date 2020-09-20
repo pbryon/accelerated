@@ -16,11 +16,15 @@ type ButtonState = {
 }
 
 let private createButton (item: ButtonState) : ReactElement =
-    Bulma.button [
+    Bulma.button.a [
         prop.text item.Text
         item.Color
         prop.onClick item.OnClick
-        prop.className [ item.Active, "is-active"; not item.Active, "is-light" ]
+        prop.className [
+            if item.Active
+            then "is-active"
+            else "is-light"
+        ]
     ]
 
 let buttonGroup (items: ButtonState list) =
@@ -34,7 +38,7 @@ let buttonGroup (items: ButtonState list) =
     ]
 
 let imgButton (text: string) icon (props: IReactProperty list) =
-    Bulma.button [
+    Bulma.button.a [
         yield! props
         prop.children [
             Bulma.icon [
@@ -45,7 +49,7 @@ let imgButton (text: string) icon (props: IReactProperty list) =
     ]
 
 let imgButtonRight (text: string) icon (props: IReactProperty list) =
-    Bulma.button [
+    Bulma.button.a [
         yield! props
         prop.children [
             if text = "" then Html.none else Html.span text
@@ -60,7 +64,7 @@ let resetButton (buttonText: string) (handler: MouseEvent -> unit) =
         Bulma.levelItem [
             prop.children [
                 imgButton buttonText Fa.trash [
-                    button.isDanger
+                    color.isDanger
                     prop.onClick handler
                 ]
             ]
@@ -74,7 +78,7 @@ let newItemButton (text: string) (onAdd: MouseEvent -> unit) =
         prop.children [
             imgButton text Fa.plus [
                 prop.className "add-item"
-                button.isInfo
+                color.isInfo
                 prop.onClick onAdd
                 prop.style [ style.marginTop 5 ]
             ]
@@ -113,7 +117,7 @@ let newItemInputs
             column.isTwoThirds
             prop.style [ style.marginTop 5 ]
             prop.children [
-                Bulma.textInput [
+                Bulma.input.text [
                     prop.name (sprintf "New_%s" name)
                     prop.placeholder (sprintf "New %s" name)
                     prop.defaultValue ""
@@ -121,7 +125,7 @@ let newItemInputs
                     prop.style [ style.maxWidth (length.perc 60) ]
                 ]
                 imgButton "Add" Fa.check [
-                    button.isInfo
+                    color.isInfo
                     prop.style [ style.marginLeft 10]
                     prop.disabled isEmpty
                     prop.onClick onAdd
@@ -130,18 +134,18 @@ let newItemInputs
         ]
 
 let addonGroup (className: string) (items: ReactElement list) =
-    Bulma.field [
+    Bulma.field.div [
         field.hasAddons
         prop.className className
         prop.children [
             yield! items |> List.map (fun x ->
-                Bulma.control [ x] )
+                Bulma.control.div [ x] )
         ]
     ]
 
 let addonButton (text: string) (width: IStyleAttribute) =
-    Bulma.button [
-        button.isPrimary
+    Bulma.button.a [
+        color.isPrimary
         prop.text text
         prop.tabIndex -1
         prop.style [ width ]

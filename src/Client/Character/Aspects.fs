@@ -190,7 +190,7 @@ module View =
             let aspectName = Convert.aspectName name
             addonGroup "high-concept" [
                 addonButton "High Concept" aspectButtonWidth
-                Bulma.textInput [
+                Bulma.input.text [
                     prop.name "high-concept"
                     prop.placeholder "High Concept"
                     prop.value aspectName
@@ -198,7 +198,7 @@ module View =
                     prop.onTextChange (newHighConcept >> UpdateAspect >> dispatch)
                     prop.style [ aspectTextWidth ]
                     if aspectName = "" then
-                        input.isDanger
+                        color.isDanger
                 ]
             ]
         | _ ->
@@ -213,7 +213,7 @@ module View =
             let aspectName = Convert.aspectName name
             addonGroup "trouble" [
                 addonButton "Trouble" aspectButtonWidth
-                Bulma.textInput [
+                Bulma.input.text [
                     prop.name "trouble"
                     prop.placeholder "Trouble"
                     prop.value aspectName
@@ -221,7 +221,7 @@ module View =
                     prop.onTextChange (newTrouble >> UpdateAspect >> dispatch)
                     prop.style [ aspectTextWidth ]
                     if aspectName = "" then
-                        input.isDanger
+                        color.isDanger
                 ]
             ]
         | _ ->
@@ -246,7 +246,7 @@ module View =
             let aspectName = Convert.aspectName name
             addonGroup "phase-trio-aspect" [
                 addonButton phaseName aspectButtonWidth
-                Bulma.textInput [
+                Bulma.input.text [
                     prop.name (sprintf "phase-%i" number)
                     prop.placeholder phaseName
                     prop.value aspectName
@@ -254,7 +254,7 @@ module View =
                     prop.onTextChange (newPhase phase >> UpdateAspect >> dispatch)
                     prop.style [ aspectTextWidth ]
                     if aspectName = "" then
-                        input.isDanger
+                        color.isDanger
                 ]
             ]
 
@@ -281,7 +281,7 @@ module View =
             let text = sprintf "Aspect %i" (start + number)
             addonGroup "other-aspect" [
                 addonButton text aspectButtonWidth
-                Bulma.textInput [
+                Bulma.input.text [
                     prop.name (sprintf "other-aspect-%i" number)
                     prop.placeholder "New Aspect"
                     prop.value (Convert.aspectName aspectName)

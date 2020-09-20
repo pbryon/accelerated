@@ -238,16 +238,16 @@ module View =
         |> List.map (fun currentTotal ->
             let isUsed = result.Used >= currentTotal
 
-            Bulma.button [
+            Bulma.button.a [
                 prop.text (string result.Rank)
                 prop.tabIndex -1
 
                 if result.IsErrored
-                then button.isDanger
-                else button.isPrimary
+                then color.isDanger
+                else color.isPrimary
 
                 if isUsed
-                then button.isLight
+                then color.isLight
                 else button.isActive
             ]
         )
@@ -260,14 +260,14 @@ module View =
             validateRanks ranks model
             |> List.collect rankButton
         let description =
-            Bulma.button [
+            Bulma.button.a [
                 prop.tabIndex -1
                 prop.className "ability-summary"
-                button.isWhite
+                color.isWhite
                 prop.text "Available ranks"
                 if not allAssigned then
                     yield! [
-                        button.isDanger
+                        color.isDanger
                         prop.title "Please assign all abilities"
                     ]
             ]
@@ -310,7 +310,7 @@ module View =
             prop.children [
                 addonGroup "edit-ability" [
                     addonButton ability.Name abilityNameWidth
-                    Bulma.textInput [
+                    Bulma.input.text [
                         text.hasTextCentered
                         prop.value value
                         prop.className "ability-rank"
@@ -318,7 +318,7 @@ module View =
                         onFocusSelectText
                         prop.onTextChange (updateAbility ability dispatch)
                         if isErrored then
-                            input.isDanger
+                            color.isDanger
                     ]
                 ]
             ]
