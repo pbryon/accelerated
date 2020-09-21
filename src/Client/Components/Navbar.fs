@@ -36,15 +36,14 @@ let private isMenuItemActive page currentPage =
 //           str <| "Logout " + user.UserName
 //         ]
 
-(*
 let private navbarStart dispatch user currentPage =
-    Bulma.navbarStart [
-        Bulma.navbarItemA [
+    Bulma.navbarStart.div [
+        Bulma.navbarItem.a [
             yield! isMenuItemActive Page.CharacterCreation currentPage
             prop.href (toHash Page.CampaignCreation)
             prop.text "Characters"
         ]
-        Bulma.navbarItemA [
+        Bulma.navbarItem.a [
             yield! isMenuItemActive Page.Copyright currentPage
             prop.href (toHash Page.Copyright)
             prop.text "Copyright"
@@ -54,9 +53,9 @@ let private navbarStart dispatch user currentPage =
 
 
 let private navbarEnd =
-    Bulma.navbarEnd [
-        Bulma.navbarItemDiv [
-            Bulma.field [
+    Bulma.navbarEnd.div [
+        Bulma.navbarItem.div [
+            Bulma.field.div [
                 field.isGrouped
                 prop.children [
                     imgButton "Source" Fa.github [
@@ -66,7 +65,6 @@ let private navbarEnd =
             ]
         ]
     ]
-*)
 
 let view dispatch user currentPage =
     Bulma.navbar [
@@ -75,12 +73,11 @@ let view dispatch user currentPage =
             Bulma.container [
                 container.isFluid
                 prop.children [
-                    (*
-                    Bulma.navbarBrand [
-                        Bulma.navbarItemA [
+                    Bulma.navbarBrand.div [
+                        Bulma.navbarItem.a [
                             prop.href "#"
                             prop.children [
-                                Bulma.title4 "Accelerated"
+                                Bulma.title.h4 "Accelerated"
                             ]
                         ]
                     ]
@@ -88,7 +85,6 @@ let view dispatch user currentPage =
                         navbarStart dispatch user currentPage
                         navbarEnd
                     ]
-                    *)
                 ]
             ]
         ]
