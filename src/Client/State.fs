@@ -11,7 +11,6 @@ open Global
 open App.Types
 open Domain.Campaign
 open Domain.System
-open Fable.Core
 
 let loadUser () : UserData option =
 //   let userDecoder = Decode.Auto.generateDecoder<UserData>()
@@ -63,13 +62,13 @@ let urlUpdate (result : Page option) model =
             model |> navigateTo Page.Index
 
 
-let init result : Model * Cmd<Msg> =
+let init page : Model * Cmd<Msg> =
     let user : UserData option = loadUser ()
     let model = {
         CurrentPage = CurrentPage.Index
         User = user
     }
-    urlUpdate result model
+    urlUpdate page model
 
 let private withCurrentPage page model =
     { model with CurrentPage = page }

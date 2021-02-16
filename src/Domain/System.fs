@@ -65,7 +65,7 @@ let rankValue =
     | Average -> 1
     | Mediocre -> 0
     | Poor -> -1
-    | Terrible -> -2
+
 
 
 type Boxes = Boxes of int
